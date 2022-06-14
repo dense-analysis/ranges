@@ -19,6 +19,31 @@ func TestSliceRange(t *testing.T) {
 	assertEqual(t, sliceCopy, []int{1, 2, 3})
 }
 
+func TestEmptyNilSliceRange(t *testing.T) {
+	t.Parallel()
+
+	r := SliceRange([]int(nil))
+
+	assertEmptyF(t, r)
+}
+
+func TestSlicePopFront(t *testing.T) {
+	t.Parallel()
+
+	r := SliceRange([]int{1, 2, 3})
+
+	r.PopFront()
+
+	sliceCopy := make([]int, 0)
+
+	for !r.Empty() {
+		sliceCopy = append(sliceCopy, r.Front())
+		r.PopFront()
+	}
+
+	assertEqual(t, sliceCopy, []int{2, 3})
+}
+
 func TestSliceRangeSave(t *testing.T) {
 	t.Parallel()
 
@@ -47,6 +72,14 @@ func TestSliceRetroRange(t *testing.T) {
 	}
 
 	assertEqual(t, sliceCopy, []int{3, 2, 1})
+}
+
+func TestEmptyNilSliceRetroRange(t *testing.T) {
+	t.Parallel()
+
+	r := SliceRetroRange([]int(nil))
+
+	assertEmptyF(t, r)
 }
 
 func TestSliceRetroRangeSave(t *testing.T) {
@@ -81,6 +114,14 @@ func TestSlicePtrRange(t *testing.T) {
 	}
 }
 
+func TestEmptyNilSlicePtrRange(t *testing.T) {
+	t.Parallel()
+
+	r := SlicePtrRange([]int(nil))
+
+	assertEmptyF(t, r)
+}
+
 func TestSlicePtrRangeSave(t *testing.T) {
 	t.Parallel()
 
@@ -111,6 +152,14 @@ func TestSlicePtrRetroRange(t *testing.T) {
 	if len(sliceCopy) != 3 || *sliceCopy[0] != 3 || *sliceCopy[1] != 2 || *sliceCopy[2] != 1 {
 		t.Fatal("sliceCopy != []int{&3, &2, &1}")
 	}
+}
+
+func TestEmptyNilSlicePtrRetroRange(t *testing.T) {
+	t.Parallel()
+
+	r := SlicePtrRetroRange([]int(nil))
+
+	assertEmptyF(t, r)
 }
 
 func TestSlicePtrRetroRangeSave(t *testing.T) {

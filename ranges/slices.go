@@ -1,65 +1,59 @@
 package ranges
 
-type baseSliceRange[T any] struct{ slice []T }
+type sliceRange[T any] []T
 
-func (r *baseSliceRange[T]) Empty() bool { return r == nil || len(r.slice) == 0 }
-func (r *baseSliceRange[T]) PopFront()   { r.slice = r.slice[1:] }
-
-type sliceRange[T any] struct{ baseSliceRange[T] }
-
-func (r *sliceRange[T]) Save() ForwardRange[T] {
-	return &sliceRange[T]{baseSliceRange[T]{r.slice}}
-}
-
-func (r *sliceRange[T]) Front() T { return r.slice[0] }
+func (r *sliceRange[T]) Empty() bool           { return r == nil || len(*r) == 0 }
+func (r *sliceRange[T]) Front() T              { return (*r)[0] }
+func (r *sliceRange[T]) PopFront()             { *r = (*r)[1:] }
+func (r *sliceRange[T]) Save() ForwardRange[T] { return SliceRange([]T(*r)) }
 
 // SliceRange creates a range from a slice.
 func SliceRange[T any](slice []T) ForwardRange[T] {
-	return &sliceRange[T]{baseSliceRange[T]{slice}}
+	result := sliceRange[T](slice)
+
+	return &result
 }
 
-type slicePtrRange[T any] struct{ baseSliceRange[T] }
+type slicePtrRange[T any] []T
 
-func (r *slicePtrRange[T]) Save() ForwardRange[*T] {
-	return &slicePtrRange[T]{baseSliceRange[T]{r.slice}}
-}
-
-func (r *slicePtrRange[T]) Front() *T { return &r.slice[0] }
+func (r *slicePtrRange[T]) Empty() bool            { return r == nil || len(*r) == 0 }
+func (r *slicePtrRange[T]) Front() *T              { return &(*r)[0] }
+func (r *slicePtrRange[T]) PopFront()              { *r = (*r)[1:] }
+func (r *slicePtrRange[T]) Save() ForwardRange[*T] { return SlicePtrRange([]T(*r)) }
 
 // SlicePtrRange creates a range of pointers to values from a slice.
 func SlicePtrRange[T any](slice []T) ForwardRange[*T] {
-	return &slicePtrRange[T]{baseSliceRange[T]{slice}}
+	result := slicePtrRange[T](slice)
+
+	return &result
 }
 
-type baseSliceRetroRange[T any] struct{ slice []T }
+type sliceRetroRange[T any] []T
 
-func (r *baseSliceRetroRange[T]) Empty() bool { return r == nil || len(r.slice) == 0 }
-func (r *baseSliceRetroRange[T]) PopFront()   { r.slice = r.slice[:len(r.slice)-1] }
-
-type sliceRetroRange[T any] struct{ baseSliceRetroRange[T] }
-
-func (r *sliceRetroRange[T]) Save() ForwardRange[T] {
-	return &sliceRetroRange[T]{baseSliceRetroRange[T]{r.slice}}
-}
-
-func (r *sliceRetroRange[T]) Front() T { return r.slice[len(r.slice)-1] }
+func (r *sliceRetroRange[T]) Empty() bool           { return r == nil || len(*r) == 0 }
+func (r *sliceRetroRange[T]) Front() T              { return (*r)[len(*r)-1] }
+func (r *sliceRetroRange[T]) PopFront()             { *r = (*r)[:len(*r)-1] }
+func (r *sliceRetroRange[T]) Save() ForwardRange[T] { return SliceRetroRange([]T(*r)) }
 
 // SliceRetroRange creates a range from a slice in reverse.
 func SliceRetroRange[T any](slice []T) ForwardRange[T] {
-	return &sliceRetroRange[T]{baseSliceRetroRange[T]{slice}}
+	result := sliceRetroRange[T](slice)
+
+	return &result
 }
 
-type slicePtrRetroRange[T any] struct{ baseSliceRetroRange[T] }
+type slicePtrRetroRange[T any] []T
 
-func (r *slicePtrRetroRange[T]) Save() ForwardRange[*T] {
-	return &slicePtrRetroRange[T]{baseSliceRetroRange[T]{r.slice}}
-}
-
-func (r *slicePtrRetroRange[T]) Front() *T { return &r.slice[len(r.slice)-1] }
+func (r *slicePtrRetroRange[T]) Empty() bool            { return r == nil || len(*r) == 0 }
+func (r *slicePtrRetroRange[T]) Front() *T              { return &(*r)[len(*r)-1] }
+func (r *slicePtrRetroRange[T]) PopFront()              { *r = (*r)[:len(*r)-1] }
+func (r *slicePtrRetroRange[T]) Save() ForwardRange[*T] { return SlicePtrRetroRange([]T(*r)) }
 
 // SlicePtrRetroRange creates a range of pointers to values from a slice.
 func SlicePtrRetroRange[T any](slice []T) ForwardRange[*T] {
-	return &slicePtrRetroRange[T]{baseSliceRetroRange[T]{slice}}
+	result := slicePtrRetroRange[T](slice)
+
+	return &result
 }
 
 // Slice creates a slice of memory from a range.
