@@ -255,8 +255,8 @@ func main() {
 
 	var wg sync.WaitGroup
 
-	go createFile(&wg, "pkg/ranges/tuple.go", writeTupleFile)
-	go createFile(&wg, "pkg/ranges/zip.go", writeZipFile)
+	go createFile(&wg, "ranges/tuple.go", writeTupleFile)
+	go createFile(&wg, "ranges/zip.go", writeZipFile)
 
 	wg.Wait()
 }
