@@ -46,10 +46,10 @@ func TestDropCallPopFrontFirst(t *testing.T) {
 func TestDropF(t *testing.T) {
 	t.Parallel()
 
-	takeForwardResult := DropF(F(Only(1, 2, 3, 4, 5)), 3)
+	dropRange := DropF(F(Only(1, 2, 3, 4, 5)), 3)
 
-	sliceCopy := SliceF(takeForwardResult.Save())
-	sliceCopy2 := SliceF(takeForwardResult.Save())
+	sliceCopy := SliceF(dropRange.Save())
+	sliceCopy2 := SliceF(dropRange.Save())
 
 	assertEqual(t, sliceCopy, []int{4, 5})
 	assertEqual(t, sliceCopy2, []int{4, 5})
@@ -86,4 +86,22 @@ func TestDropFNegative(t *testing.T) {
 	sliceCopy := Slice[int](DropF(F(Only(1, 2, 3)), -10))
 
 	assertEqual(t, sliceCopy, []int{1, 2, 3})
+}
+
+func TestDropB(t *testing.T) {
+	t.Parallel()
+
+	dropRange := DropB(Only(1, 2, 3, 4, 5), 3)
+
+	sliceCopy := SliceB(dropRange.SaveB())
+	sliceCopy2 := SliceB(dropRange.SaveB())
+
+	assertEqual(t, sliceCopy, []int{4, 5})
+	assertEqual(t, sliceCopy2, []int{4, 5})
+
+	assertHasBack(t, dropRange, 5)
+	dropRange.PopBack()
+	assertHasBack(t, dropRange, 4)
+	dropRange.PopBack()
+	assertEmptyB(t, dropRange)
 }

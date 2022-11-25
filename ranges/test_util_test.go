@@ -86,6 +86,20 @@ func assertHasFrontB[T any](t *testing.T, r BidirectionalRange[T], value T) {
 	assertHasFront[T](t, r, value)
 }
 
+func assertHasBack[T any](t *testing.T, r BidirectionalRange[T], value T) {
+	t.Helper()
+
+	if r.Empty() {
+		t.Fatalf("Range was empty, did not end with %v", value)
+	} else {
+		back := r.Back()
+
+		if !reflect.DeepEqual(back, value) {
+			t.Fatalf("Range ended with %v not %v", back, value)
+		}
+	}
+}
+
 func assertHasSaveableFront[T any](t *testing.T, r ForwardRange[T], value T) {
 	t.Helper()
 	assertHasFront[T](t, r, value)
