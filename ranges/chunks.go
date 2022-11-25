@@ -1,7 +1,7 @@
 package ranges
 
 type chunkResult[T any] struct {
-	size int
+	size       int
 	takeResult takeResult[T]
 }
 
@@ -22,7 +22,7 @@ func (cr *chunkResult[T]) PopFront() {
 }
 
 type chunkForwardResult[T any] struct {
-	size int
+	size       int
 	takeResult takeForwardResult[T]
 }
 
@@ -54,10 +54,12 @@ func (cr *chunkForwardResult[T]) Save() ForwardRange[ForwardRange[T]] {
 	}
 }
 
+// Chunks returns sub-ranges that are at most `size` in length.
 func Chunks[T any](r InputRange[T], size int) InputRange[InputRange[T]] {
 	return &chunkResult[T]{size, takeResult[T]{size, r}}
 }
 
+// `ChunksF` is `Chunks` where the range can be saved.
 func ChunksF[T any](r ForwardRange[T], size int) ForwardRange[ForwardRange[T]] {
 	return &chunkForwardResult[T]{
 		size,
