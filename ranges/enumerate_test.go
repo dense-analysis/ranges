@@ -34,7 +34,7 @@ func TestEnumerateN(t *testing.T) {
 func TestEnumerateF(t *testing.T) {
 	t.Parallel()
 
-	enumerateRange := EnumerateF(Only(7, 9, 1))
+	enumerateRange := EnumerateF(F(Only(7, 9, 1)))
 
 	keys := SliceF(MapF(
 		enumerateRange.Save(),
@@ -55,7 +55,7 @@ func TestEnumerateNF(t *testing.T) {
 	t.Parallel()
 
 	keys := SliceF(MapF(
-		EnumerateNF(Only(7, 9, 1), 3),
+		EnumerateNF(F(Only(7, 9, 1)), 3),
 		func(x Pair[int, int]) int { return x.A },
 	))
 

@@ -57,5 +57,5 @@ func TestSlideS(t *testing.T) {
 func TestSlideSizeZeroPanics(t *testing.T) {
 	t.Parallel()
 
-	assertPanic(t, "windowSize < 1 for Slide", func() { Slide(Null[int](), 0) })
+	assertPanic(t, "windowSize < 1 for Slide", func() { Slide(F(Null[int]()), 0) })
 }

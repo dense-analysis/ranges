@@ -5,13 +5,13 @@ import "testing"
 func TestCache(t *testing.T) {
 	t.Parallel()
 
-	assertEqual(t, Slice(Cache(I(Null[int]()))), []int{})
-	assertEqual(t, Slice(Cache(I(Only(1, 2, 3)))), []int{1, 2, 3})
+	assertEqual(t, Slice(Cache(I(F(Null[int]())))), []int{})
+	assertEqual(t, Slice(Cache(I(F(Only(1, 2, 3))))), []int{1, 2, 3})
 
 	storedValues := make([]int, 0)
 
 	r := Cache(
-		Map(I(Only(5, 6, 7)), func(elem int) int { storedValues = append(storedValues, elem); return elem }),
+		Map(I(F(Only(5, 6, 7))), func(elem int) int { storedValues = append(storedValues, elem); return elem }),
 	)
 
 	r.Front()
@@ -30,13 +30,13 @@ func TestCache(t *testing.T) {
 func TestCacheF(t *testing.T) {
 	t.Parallel()
 
-	assertEqual(t, SliceF(CacheF(Null[int]())), []int{})
-	assertEqual(t, SliceF(CacheF(Only(1, 2, 3))), []int{1, 2, 3})
+	assertEqual(t, SliceF(CacheF(F(Null[int]()))), []int{})
+	assertEqual(t, SliceF(CacheF(F(Only(1, 2, 3)))), []int{1, 2, 3})
 
 	storedValues := make([]int, 0)
 
 	r := CacheF(
-		MapF(Only(5, 6, 7), func(elem int) int { storedValues = append(storedValues, elem); return elem }),
+		MapF(F(Only(5, 6, 7)), func(elem int) int { storedValues = append(storedValues, elem); return elem }),
 	)
 
 	r.Front()

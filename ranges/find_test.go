@@ -5,14 +5,14 @@ import "testing"
 func TestFind(t *testing.T) {
 	t.Parallel()
 
-	result := Slice(Find(I(Only(1, 2, 3, 4)), Ge[int], 3))
+	result := Slice(Find(I(F(Only(1, 2, 3, 4))), Ge[int], 3))
 	assertEqual(t, result, []int{3, 4})
 }
 
 func TestFindF(t *testing.T) {
 	t.Parallel()
 
-	assertHasSaveableFront(t, FindF(Only(1, 2, 3, 4), Ge[int], 3), 3)
+	assertHasSaveableFront(t, FindF(F(Only(1, 2, 3, 4)), Ge[int], 3), 3)
 }
 
 func TestFindS(t *testing.T) {
@@ -24,13 +24,13 @@ func TestFindS(t *testing.T) {
 func TestFindComparable(t *testing.T) {
 	t.Parallel()
 
-	assertEqual(t, Slice(FindComparable(I(Only(1, 2, 3, 4)), 3)), []int{3, 4})
+	assertEqual(t, Slice(FindComparable(I(F(Only(1, 2, 3, 4))), 3)), []int{3, 4})
 }
 
 func TestFindComparableF(t *testing.T) {
 	t.Parallel()
 
-	assertEqual(t, SliceF(FindComparableF(Only(1, 2, 3, 4), 3)), []int{3, 4})
+	assertEqual(t, SliceF(FindComparableF(F(Only(1, 2, 3, 4)), 3)), []int{3, 4})
 }
 
 func TestFindComparableS(t *testing.T) {
@@ -46,7 +46,7 @@ func TestFindEqual(t *testing.T) {
 
 	assertEqual(t, string(result), "orld")
 
-	result2 := SliceF(FindEqual(Only(1, 3, 2, 3, 4, 5), Eq[int], Only(3, 4)))
+	result2 := SliceF(FindEqual(F(Only(1, 3, 2, 3, 4, 5)), Eq[int], F(Only(3, 4))))
 
 	assertEqual(t, result2, []int{3, 4, 5})
 }
@@ -66,7 +66,7 @@ func TestFindEqualComparable(t *testing.T) {
 
 	assertEqual(t, string(result), "orld")
 
-	result2 := SliceF(FindEqualComparable(Only(1, 3, 2, 3, 4, 5), Only(3, 4)))
+	result2 := SliceF(FindEqualComparable(F(Only(1, 3, 2, 3, 4, 5)), F(Only(3, 4))))
 
 	assertEqual(t, result2, []int{3, 4, 5})
 }
@@ -89,7 +89,7 @@ func TestFindAdjacent(t *testing.T) {
 
 	assertEqual(t, string(result2), "")
 
-	result3 := SliceF(FindAdjacent(Only(1, 2, 3, 4, 4, 5), Eq[int]))
+	result3 := SliceF(FindAdjacent(F(Only(1, 2, 3, 4, 4, 5)), Eq[int]))
 
 	assertEqual(t, result3, []int{4, 4, 5})
 }
@@ -112,7 +112,7 @@ func TestFindAdjacentComparable(t *testing.T) {
 
 	assertEqual(t, string(result2), "")
 
-	result3 := SliceF(FindAdjacentComparable(Only(1, 2, 3, 4, 4, 5)))
+	result3 := SliceF(FindAdjacentComparable(F(Only(1, 2, 3, 4, 4, 5))))
 
 	assertEqual(t, result3, []int{4, 4, 5})
 }
@@ -177,11 +177,11 @@ func TestFindAmongComparableS(t *testing.T) {
 func TestCanFind(t *testing.T) {
 	t.Parallel()
 
-	if !CanFind(I(Only(1, 2, 3, 4)), Ge[int], 3) {
+	if !CanFind(I(F(Only(1, 2, 3, 4))), Ge[int], 3) {
 		t.Error("Couldn't find x >= 3 in (1, 2, 3, 4)")
 	}
 
-	if CanFind(I(Only(1, 2, 3, 4)), Ge[int], 10) {
+	if CanFind(I(F(Only(1, 2, 3, 4))), Ge[int], 10) {
 		t.Error("Incorrectly found x >= 10 in (1, 2, 3, 4)")
 	}
 }
@@ -197,11 +197,11 @@ func TestCanFindS(t *testing.T) {
 func TestCanFindComparable(t *testing.T) {
 	t.Parallel()
 
-	if !CanFindComparable(I(Only(1, 2, 3, 4)), 3) {
+	if !CanFindComparable(I(F(Only(1, 2, 3, 4))), 3) {
 		t.Error("Couldn't find x == 3 in (1, 2, 3, 4)")
 	}
 
-	if CanFindComparable(I(Only(1, 2, 3, 4)), 10) {
+	if CanFindComparable(I(F(Only(1, 2, 3, 4))), 10) {
 		t.Error("Incorrectly found x == 10 in (1, 2, 3, 4)")
 	}
 }

@@ -21,7 +21,7 @@ func TestFilterIsLazy(t *testing.T) {
 func TestFilterF(t *testing.T) {
 	t.Parallel()
 
-	r := Only(1, 2, 3, 4)
+	r := F(Only(1, 2, 3, 4))
 	fr := FilterF(r, func(element int) bool { return element%2 == 0 })
 	fr2 := fr.Save()
 

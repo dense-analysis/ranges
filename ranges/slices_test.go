@@ -44,6 +44,23 @@ func TestSlicePopFront(t *testing.T) {
 	assertEqual(t, sliceCopy, []int{2, 3})
 }
 
+func TestSlicePopBack(t *testing.T) {
+	t.Parallel()
+
+	r := SliceRange([]int{1, 2, 3})
+
+	r.PopBack()
+
+	sliceCopy := make([]int, 0)
+
+	for !r.Empty() {
+		sliceCopy = append(sliceCopy, r.Back())
+		r.PopBack()
+	}
+
+	assertEqual(t, sliceCopy, []int{2, 1})
+}
+
 func TestSliceRangeSave(t *testing.T) {
 	t.Parallel()
 
@@ -55,6 +72,21 @@ func TestSliceRangeSave(t *testing.T) {
 	r.PopFront()
 
 	if r2.Empty() || r2.Front() != 1 {
+		t.Fatal("The range was not saved")
+	}
+}
+
+func TestSliceRangeSaveB(t *testing.T) {
+	t.Parallel()
+
+	r := SliceRange([]int{1, 2, 3})
+	r2 := r.SaveB()
+
+	r.PopFront()
+	r.PopFront()
+	r.PopBack()
+
+	if r2.Empty() || r2.Front() != 1 || r2.Back() != 3 {
 		t.Fatal("The range was not saved")
 	}
 }
@@ -72,6 +104,21 @@ func TestSliceRetroRange(t *testing.T) {
 	}
 
 	assertEqual(t, sliceCopy, []int{3, 2, 1})
+}
+
+func TestSliceRetroRangeBack(t *testing.T) {
+	t.Parallel()
+
+	r := SliceRetroRange([]int{1, 2, 3})
+
+	sliceCopy := make([]int, 0)
+
+	for !r.Empty() {
+		sliceCopy = append(sliceCopy, r.Back())
+		r.PopBack()
+	}
+
+	assertEqual(t, sliceCopy, []int{1, 2, 3})
 }
 
 func TestEmptyNilSliceRetroRange(t *testing.T) {
@@ -97,6 +144,21 @@ func TestSliceRetroRangeSave(t *testing.T) {
 	}
 }
 
+func TestSliceRetroRangeSaveB(t *testing.T) {
+	t.Parallel()
+
+	r := SliceRetroRange([]int{1, 2, 3})
+	r2 := r.SaveB()
+
+	r.PopFront()
+	r.PopFront()
+	r.PopBack()
+
+	if r2.Empty() || r2.Front() != 3 || r2.Back() != 1 {
+		t.Fatal("The range was not saved")
+	}
+}
+
 func TestSlicePtrRange(t *testing.T) {
 	t.Parallel()
 
@@ -111,6 +173,23 @@ func TestSlicePtrRange(t *testing.T) {
 
 	if len(sliceCopy) != 3 || *sliceCopy[0] != 1 || *sliceCopy[1] != 2 || *sliceCopy[2] != 3 {
 		t.Fatal("sliceCopy != []int{&1, &2, &3}")
+	}
+}
+
+func TestSlicePtrRangeBack(t *testing.T) {
+	t.Parallel()
+
+	r := SlicePtrRange([]int{1, 2, 3})
+
+	sliceCopy := make([]*int, 0)
+
+	for !r.Empty() {
+		sliceCopy = append(sliceCopy, r.Back())
+		r.PopBack()
+	}
+
+	if len(sliceCopy) != 3 || *sliceCopy[0] != 3 || *sliceCopy[1] != 2 || *sliceCopy[2] != 1 {
+		t.Fatal("sliceCopy != []int{&3, &2, &1}")
 	}
 }
 
@@ -137,6 +216,21 @@ func TestSlicePtrRangeSave(t *testing.T) {
 	}
 }
 
+func TestSlicePtrRangeSaveB(t *testing.T) {
+	t.Parallel()
+
+	r := SlicePtrRange([]int{1, 2, 3})
+	r2 := r.SaveB()
+
+	r.PopFront()
+	r.PopFront()
+	r.PopBack()
+
+	if r2.Empty() || *r2.Front() != 1 || *r2.Back() != 3 {
+		t.Fatal("The range was not saved")
+	}
+}
+
 func TestSlicePtrRetroRange(t *testing.T) {
 	t.Parallel()
 
@@ -151,6 +245,23 @@ func TestSlicePtrRetroRange(t *testing.T) {
 
 	if len(sliceCopy) != 3 || *sliceCopy[0] != 3 || *sliceCopy[1] != 2 || *sliceCopy[2] != 1 {
 		t.Fatal("sliceCopy != []int{&3, &2, &1}")
+	}
+}
+
+func TestSlicePtrRetroRangeBack(t *testing.T) {
+	t.Parallel()
+
+	r := SlicePtrRetroRange([]int{1, 2, 3})
+
+	sliceCopy := make([]*int, 0)
+
+	for !r.Empty() {
+		sliceCopy = append(sliceCopy, r.Back())
+		r.PopBack()
+	}
+
+	if len(sliceCopy) != 3 || *sliceCopy[0] != 1 || *sliceCopy[1] != 2 || *sliceCopy[2] != 3 {
+		t.Fatal("sliceCopy != []int{&1, &2, &3}")
 	}
 }
 
@@ -177,6 +288,21 @@ func TestSlicePtrRetroRangeSave(t *testing.T) {
 	}
 }
 
+func TestSlicePtrRetroRangeSaveB(t *testing.T) {
+	t.Parallel()
+
+	r := SlicePtrRetroRange([]int{1, 2, 3})
+	r2 := r.SaveB()
+
+	r.PopFront()
+	r.PopFront()
+	r.PopBack()
+
+	if r2.Empty() || *r2.Front() != 3 || *r2.Back() != 1 {
+		t.Fatal("The range was not saved")
+	}
+}
+
 func TestSlice(t *testing.T) {
 	t.Parallel()
 
@@ -189,6 +315,14 @@ func TestSliceF(t *testing.T) {
 	t.Parallel()
 
 	sliceCopy := SliceF(F(SliceRange([]int{1, 2, 3})))
+
+	assertEqual(t, sliceCopy, []int{1, 2, 3})
+}
+
+func TestSliceB(t *testing.T) {
+	t.Parallel()
+
+	sliceCopy := SliceB(SliceRange([]int{1, 2, 3}))
 
 	assertEqual(t, sliceCopy, []int{1, 2, 3})
 }
@@ -223,6 +357,32 @@ func TestRunes(t *testing.T) {
 	}
 
 	r.PopFront()
+
+	assertEmptyB(t, r)
+}
+
+func TestRunesBack(t *testing.T) {
+	t.Parallel()
+
+	r := Runes("日本語")
+
+	if r.Empty() || r.Back() != '語' {
+		t.Fatal("runes[2] != '語'")
+	}
+
+	r.PopBack()
+
+	if r.Empty() || r.Back() != '本' {
+		t.Fatal("runes[1] != '本'")
+	}
+
+	r.PopBack()
+
+	if r.Empty() || r.Back() != '日' {
+		t.Fatal("runes[0] != '日'")
+	}
+
+	r.PopBack()
 
 	assertEmptyB(t, r)
 }

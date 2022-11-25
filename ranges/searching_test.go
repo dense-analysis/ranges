@@ -107,9 +107,9 @@ func TestSkipOver(t *testing.T) {
 func TestLength(t *testing.T) {
 	t.Parallel()
 
-	assertEqual(t, Length(I(Only[int]())), 0)
-	assertEqual(t, Length(I(Only(1))), 1)
-	assertEqual(t, Length(I(Only(4, 5, 6))), 3)
+	assertEqual(t, Length(I(F(Only[int]()))), 0)
+	assertEqual(t, Length(I(F(Only(1)))), 1)
+	assertEqual(t, Length(I(F(Only(4, 5, 6)))), 3)
 }
 
 func TestCount(t *testing.T) {
@@ -136,7 +136,7 @@ func TestCount(t *testing.T) {
 func TestCountUntil(t *testing.T) {
 	t.Parallel()
 
-	r := Only(4, 2, 3, 4, 5)
+	r := F(Only(4, 2, 3, 4, 5))
 	res1 := CountUntil[int](r, func(x int) bool { return x%2 == 1 })
 
 	if res1 != 2 {

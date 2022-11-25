@@ -7,14 +7,14 @@ func TestNull(t *testing.T) {
 
 	null := Null[int]()
 
-	assertEmptyF(t, null)
+	assertEmptyB(t, null)
 }
 
 func TestOnly(t *testing.T) {
 	t.Parallel()
 
-	assertEqual(t, SliceF(Only[int]()), []int{})
-	assertEqual(t, SliceF(Only(1)), []int{1})
-	assertEqual(t, SliceF(Only(1, 2)), []int{1, 2})
-	assertEqual(t, SliceF(Only(1, 2, 3)), []int{1, 2, 3})
+	assertEqual(t, SliceB(Only[int]()), []int{})
+	assertEqual(t, SliceB(Only(1)), []int{1})
+	assertEqual(t, SliceB(Only(1, 2)), []int{1, 2})
+	assertEqual(t, SliceB(Only(1, 2, 3)), []int{1, 2, 3})
 }

@@ -74,9 +74,9 @@ with an `S` suffix.
     excluding an `end` value, incrementing by `1`.
   * `IotaStart` - `Iota` with a given `start` value to use in place of `0`.
   * `IotaStep` - `IotaStart` with a `step` value to use in place of `1`.
-  * `Null` - Returns a `ForwardRange` that is always empty and consumes zero
-    memory.
-  * `Only` - Returns a `ForwardRange` through the arguments provided.
+  * `Null` - Returns a `BidirectionalRange` that is always empty and consumes
+    zero memory.
+  * `Only` - Returns a `BidirectionalRange` through the arguments provided.
   * `PadRight` - Produces an `InputRange` with up to `count` items by padding
     the range with a given value.
   * `Repeat` - Creates an infinite `ForwardRange` repeating a value.

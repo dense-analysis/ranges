@@ -34,8 +34,8 @@ func TestFlatten(t *testing.T) {
 	result := Slice(
 		Flatten[int](
 			Only(
-				I(Only(1, 2, 3)),
-				I(Only(4, 5)),
+				I(F(Only(1, 2, 3))),
+				I(F(Only(4, 5))),
 			),
 		),
 	)
@@ -57,8 +57,8 @@ func TestChainF(t *testing.T) {
 	}
 
 	chain := ChainF(
-		ChainF(Only(1, 2), Null[int](), Only(3, 4)),
-		ChainF(Null[int](), Only(5, 6), Null[int]()),
+		ChainF(F(Only(1, 2)), F(Null[int]()), F(Only(3, 4))),
+		ChainF(F(Null[int]()), F(Only(5, 6)), F(Null[int]())),
 	)
 
 	chain.PopFront()
@@ -78,6 +78,41 @@ func TestChainFIsLazy(t *testing.T) {
 	ChainF[int](nil)
 }
 
+func TestChainB(t *testing.T) {
+	t.Parallel()
+
+	emptyChain := ChainB[int]()
+
+	if !emptyChain.Empty() {
+		t.Fatal("An empty chain was not empty")
+	}
+
+	if !emptyChain.Save().Empty() {
+		t.Fatal("An saved empty chain was not empty!")
+	}
+
+	chain := ChainB(
+		ChainB(Only(1, 2), Null[int](), Only(3, 4)),
+		ChainB(Null[int](), Only(5, 6), Null[int]()),
+	)
+
+	chain.PopBack()
+	chain.PopBack()
+	chain.PopBack()
+
+	savedChain := chain.SaveB()
+
+	assertEqual(t, SliceB(chain), []int{1, 2, 3})
+	assertEqual(t, SliceB(savedChain), []int{1, 2, 3})
+}
+
+func TestChainBIsLazy(t *testing.T) {
+	t.Parallel()
+
+	// This will panic if it's not lazy.
+	ChainB[int](nil)
+}
+
 func TestFrontTransversal(t *testing.T) {
 	t.Parallel()
 
@@ -90,12 +125,12 @@ func TestFrontTransversal(t *testing.T) {
 	sliceCopy := Slice(
 		FrontTransversal[int](
 			Only(
-				I(Only(1, 2)),
-				I(Only[int]()),
-				I(Only(3, 4)),
-				I(Only[int]()),
-				I(Only(5, 6)),
-				I(Only[int]()),
+				I(F(Only(1, 2))),
+				I(F(Only[int]())),
+				I(F(Only(3, 4))),
+				I(F(Only[int]())),
+				I(F(Only(5, 6))),
+				I(F(Only[int]())),
 			),
 		),
 	)
@@ -106,21 +141,21 @@ func TestFrontTransversal(t *testing.T) {
 func TestFrontTransversalF(t *testing.T) {
 	t.Parallel()
 
-	empty := FrontTransversalF(Null[ForwardRange[int]]())
+	empty := FrontTransversalF(F(Null[ForwardRange[int]]()))
 
 	if !empty.Empty() {
 		t.Fatal("An empty transversal was not empty")
 	}
 
 	transversal := FrontTransversalF(
-		Only(
-			Only(1, 2),
-			Only[int](),
-			Only(3, 4),
-			Only[int](),
-			Only(5, 6),
-			Only[int](),
-		),
+		F(Only(
+			F(Only(1, 2)),
+			F(Only[int]()),
+			F(Only(3, 4)),
+			F(Only[int]()),
+			F(Only(5, 6)),
+			F(Only[int]()),
+		)),
 	)
 
 	transversal.PopFront()

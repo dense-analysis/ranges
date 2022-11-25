@@ -81,9 +81,9 @@ func TestSplitterLeadingEmptySplit(t *testing.T) {
 	result := SliceF(
 		MapF(
 			Splitter(
-				Only(0, 4, 5, 6, 0, 7, 8, 9),
+				F(Only(0, 4, 5, 6, 0, 7, 8, 9)),
 				Eq[int],
-				Only(0),
+				F(Only(0)),
 			),
 			SliceF[int],
 		),
@@ -102,9 +102,9 @@ func TestSplitterTrailingEmptySplit(t *testing.T) {
 	result := SliceF(
 		MapF(
 			Splitter(
-				Only(4, 5, 6, 0, 7, 8, 9, 0),
+				F(Only(4, 5, 6, 0, 7, 8, 9, 0)),
 				Eq[int],
-				Only(0),
+				F(Only(0)),
 			),
 			SliceF[int],
 		),

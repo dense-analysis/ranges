@@ -8,7 +8,7 @@ func TestChunkBy(t *testing.T) {
 	result := Slice(
 		Map(
 			ChunkBy(
-				I(Only(1, 2, 3, 3, 4, 5, 6, 6, 7, 8)),
+				I(F(Only(1, 2, 3, 3, 4, 5, 6, 6, 7, 8))),
 				func(a, b int) bool { return a == b },
 			),
 			Slice[int],
@@ -20,7 +20,7 @@ func TestChunkBy(t *testing.T) {
 	result2 := Slice(
 		Map(
 			ChunkBy(
-				I(Only(1, 2, 3, 3, 4, 5, 6, 6, 7, 8, 8, 9, 9)),
+				I(F(Only(1, 2, 3, 3, 4, 5, 6, 6, 7, 8, 8, 9, 9))),
 				func(a, b int) bool { return a < b },
 			),
 			Slice[int],
@@ -34,7 +34,7 @@ func TestChunkByRepeatedFront(t *testing.T) {
 	t.Parallel()
 
 	result := ChunkBy(
-		I(Only(1, 2, 3, 3, 4, 5, 6, 6, 7, 8, 8, 9, 9)),
+		I(F(Only(1, 2, 3, 3, 4, 5, 6, 6, 7, 8, 8, 9, 9))),
 		func(a, b int) bool { return a < b },
 	)
 

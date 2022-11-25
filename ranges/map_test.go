@@ -14,7 +14,7 @@ func TestMap(t *testing.T) {
 func TestMapF(t *testing.T) {
 	t.Parallel()
 
-	r := Only(1, 2)
+	r := F(Only(1, 2))
 	fr := MapF(r, func(element int) float64 { return float64(element * 2) })
 	fr2 := fr.Save()
 

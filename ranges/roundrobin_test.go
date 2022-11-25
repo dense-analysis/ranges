@@ -37,15 +37,15 @@ func TestRoundRobinF(t *testing.T) {
 
 	output := SliceF(
 		RoundRobinF(
-			Only(1, 2, 3),
-			Only(4, 5),
-			Only(7, 8, 9),
+			F(Only(1, 2, 3)),
+			F(Only(4, 5)),
+			F(Only(7, 8, 9)),
 		),
 	)
 
 	assertEqual(t, output, []int{1, 4, 7, 2, 5, 8, 3, 9})
 
-	r := RoundRobinF(Only(1, 3), Only(2))
+	r := RoundRobinF(F(Only(1, 3)), F(Only(2)))
 	r.PopFront()
 
 	r2 := r.Save()
