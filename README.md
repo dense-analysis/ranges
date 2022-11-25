@@ -80,6 +80,7 @@ with an `S` suffix.
   * `PadRight` - Produces an `InputRange` with up to `count` items by padding
     the range with a given value.
   * `Repeat` - Creates an infinite `ForwardRange` repeating a value.
+  * `Retro` - Returns a reversed `BidirectionalRange`.
   * `RoundRobin` - Produces an `InputRange` iterating over the first value of
     every non-empty range in a range of ranges in a cycle until all ranges are
     exhausted.

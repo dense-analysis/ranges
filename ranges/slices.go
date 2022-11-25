@@ -34,38 +34,14 @@ func SlicePtrRange[T any](slice []T) BidirectionalRange[*T] {
 	return &result
 }
 
-type sliceRetroRange[T any] []T
-
-func (r *sliceRetroRange[T]) Empty() bool                  { return r == nil || len(*r) == 0 }
-func (r *sliceRetroRange[T]) Front() T                     { return (*r)[len(*r)-1] }
-func (r *sliceRetroRange[T]) PopFront()                    { *r = (*r)[:len(*r)-1] }
-func (r *sliceRetroRange[T]) Back() T                      { return (*r)[0] }
-func (r *sliceRetroRange[T]) PopBack()                     { *r = (*r)[1:] }
-func (r *sliceRetroRange[T]) Save() ForwardRange[T]        { return r.SaveB() }
-func (r *sliceRetroRange[T]) SaveB() BidirectionalRange[T] { return SliceRetroRange([]T(*r)) }
-
 // SliceRetroRange creates a range from a slice in reverse.
 func SliceRetroRange[T any](slice []T) BidirectionalRange[T] {
-	result := sliceRetroRange[T](slice)
-
-	return &result
+	return Retro(SliceRange(slice))
 }
 
-type slicePtrRetroRange[T any] []T
-
-func (r *slicePtrRetroRange[T]) Empty() bool                   { return r == nil || len(*r) == 0 }
-func (r *slicePtrRetroRange[T]) Front() *T                     { return &(*r)[len(*r)-1] }
-func (r *slicePtrRetroRange[T]) PopFront()                     { *r = (*r)[:len(*r)-1] }
-func (r *slicePtrRetroRange[T]) Back() *T                      { return &(*r)[0] }
-func (r *slicePtrRetroRange[T]) PopBack()                      { *r = (*r)[1:] }
-func (r *slicePtrRetroRange[T]) Save() ForwardRange[*T]        { return r.SaveB() }
-func (r *slicePtrRetroRange[T]) SaveB() BidirectionalRange[*T] { return SlicePtrRetroRange([]T(*r)) }
-
-// SlicePtrRetroRange creates a range of pointers to values from a slice.
+// SlicePtrRetroRange creates a range of pointers to values from a slice in reverse.
 func SlicePtrRetroRange[T any](slice []T) BidirectionalRange[*T] {
-	result := slicePtrRetroRange[T](slice)
-
-	return &result
+	return Retro(SlicePtrRange(slice))
 }
 
 // Slice creates a slice of memory from a range.
