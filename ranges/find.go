@@ -12,7 +12,7 @@ func FindF[T any](haystack ForwardRange[T], cb func(a, b T) bool, needle T) Forw
 
 // FindS is `FindF` accepting a slice.
 func FindS[T any](haystack []T, cb func(a, b T) bool, needle T) ForwardRange[T] {
-	return FindF(SliceRange(haystack), cb, needle)
+	return FindF(F(SliceRange(haystack)), cb, needle)
 }
 
 // FindComparable advances a range until Front() == needle
@@ -27,7 +27,7 @@ func FindComparableF[T comparable](haystack ForwardRange[T], needle T) ForwardRa
 
 // FindComparableS is `FindComparableF` accepting a slice.
 func FindComparableS[T comparable](haystack []T, needle T) ForwardRange[T] {
-	return FindComparableF(SliceRange(haystack), needle)
+	return FindComparableF(F(SliceRange(haystack)), needle)
 }
 
 // FindEqual advances a range until cb(a, b) returns `true` for all elments of `needle`.
@@ -37,7 +37,7 @@ func FindEqual[T any](haystack ForwardRange[T], cb func(a, b T) bool, needle For
 
 // FindEqualS is FindEqual accepting a slice.
 func FindEqualS[T any](haystack []T, cb func(a, b T) bool, needle ForwardRange[T]) ForwardRange[T] {
-	return FindEqual(SliceRange(haystack), cb, needle)
+	return FindEqual(F(SliceRange(haystack)), cb, needle)
 }
 
 // FindEqualComparable advances a range until `a == b` is satisifed for all elements of a `needle`.
@@ -56,7 +56,7 @@ func FindEqualComparable[T comparable](haystack ForwardRange[T], needle ForwardR
 
 // FindEqualComparableS is FindEqualComparable accepting a slice.
 func FindEqualComparableS[T comparable](haystack []T, needle ForwardRange[T]) ForwardRange[T] {
-	return FindEqualComparable(SliceRange(haystack), needle)
+	return FindEqualComparable(F(SliceRange(haystack)), needle)
 }
 
 // FindAdjacent advances a range until cb(a, b) returns `true` for two adjacent elements.
@@ -71,7 +71,7 @@ func FindAdjacent[T any](haystack ForwardRange[T], cb func(a, b T) bool) Forward
 
 // FindAdjacentS is FindAdjacent accepting a slice.
 func FindAdjacentS[T any](haystack []T, cb func(a, b T) bool) ForwardRange[T] {
-	return FindAdjacent(SliceRange(haystack), cb)
+	return FindAdjacent(F(SliceRange(haystack)), cb)
 }
 
 // FindAdjacentComparable advances a range until a == b for two adjacent elements.
@@ -81,7 +81,7 @@ func FindAdjacentComparable[T comparable](haystack ForwardRange[T]) ForwardRange
 
 // FindAdjacentComparableS is FindAdjacentComparable accepting a slice.
 func FindAdjacentComparableS[T comparable](haystack []T) ForwardRange[T] {
-	return FindAdjacentComparable(SliceRange(haystack))
+	return FindAdjacentComparable(F(SliceRange(haystack)))
 }
 
 // FindAmong advances until `cb(a, b) == true` for any element of `needle`.
@@ -100,7 +100,7 @@ func FindAmongF[T any](haystack ForwardRange[T], cb func(a, b T) bool, needle Fo
 
 // FindAmongS is FindAmongF accepting a slice.
 func FindAmongS[T any](haystack []T, cb func(a, b T) bool, needle ForwardRange[T]) ForwardRange[T] {
-	return FindAmongF(SliceRange(haystack), cb, needle)
+	return FindAmongF(F(SliceRange(haystack)), cb, needle)
 }
 
 // FindAmongComparable advances until `a == b` for any element of `needle`.
@@ -115,7 +115,7 @@ func FindAmongComparableF[T comparable](haystack ForwardRange[T], needle Forward
 
 // FindAmongComparableS is FindAmongComparableF accepting a slice.
 func FindAmongComparableS[T comparable](haystack []T, needle ForwardRange[T]) ForwardRange[T] {
-	return FindAmongComparableF(SliceRange(haystack), needle)
+	return FindAmongComparableF(F(SliceRange(haystack)), needle)
 }
 
 // CanFind returns `true` if `cb(a, b) == true`, comparing with needle.

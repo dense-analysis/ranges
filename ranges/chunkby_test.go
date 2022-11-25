@@ -71,7 +71,7 @@ func TestChunkByValue(t *testing.T) {
 	result := Slice(
 		Map(
 			ChunkByValue(
-				I(SliceRange([]chunkByValueTestStruct{{1}, {2}, {3}, {3}, {4}, {5}, {6}, {6}, {7}, {8}})),
+				I(F(SliceRange([]chunkByValueTestStruct{{1}, {2}, {3}, {3}, {4}, {5}, {6}, {6}, {7}, {8}}))),
 				func(a chunkByValueTestStruct) int { return a.x },
 			),
 			Slice[chunkByValueTestStruct],

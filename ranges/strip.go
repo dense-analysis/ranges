@@ -57,7 +57,7 @@ func StripLeftComparableF[T comparable](r ForwardRange[T], value T) ForwardRange
 
 // StripLeftComparableS is `StripLeftComparableF` accepting a slice.
 func StripLeftComparableS[T comparable](r []T, value T) ForwardRange[T] {
-	return StripLeftComparableF(SliceRange(r), value)
+	return StripLeftComparableF(F(SliceRange(r)), value)
 }
 
 type stripLeftResult[T any] struct {
@@ -117,5 +117,5 @@ func StripLeftF[T comparable](r ForwardRange[T], cb func(a T) bool) ForwardRange
 
 // StripLeftS is `StripLeftF` accepting a slice.
 func StripLeftS[T comparable](r []T, cb func(a T) bool) ForwardRange[T] {
-	return StripLeftF(SliceRange(r), cb)
+	return StripLeftF(F(SliceRange(r)), cb)
 }

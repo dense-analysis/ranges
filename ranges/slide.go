@@ -61,5 +61,5 @@ func SlideStep[T any](r ForwardRange[T], windowSize int, stepSize int) ForwardRa
 
 // SlideStepS is `Slide` accepting a slice.
 func SlideStepS[T any](r []T, windowSize int, stepSize int) ForwardRange[ForwardRange[T]] {
-	return SlideStep(SliceRange(r), windowSize, stepSize)
+	return SlideStep(F(SliceRange(r)), windowSize, stepSize)
 }

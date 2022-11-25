@@ -120,6 +120,82 @@ func (ftr *frontTransversalForwardResult[T]) Save() ForwardRange[T] {
 	return &frontTransversalForwardResult[T]{baseForwardChain[T]{ftr.saveOuter(), ftr.isPrimed}}
 }
 
+type baseBidrectionalChain[T any] struct {
+	r        BidirectionalRange[BidirectionalRange[T]]
+	isPrimed bool
+}
+
+func (bc *baseBidrectionalChain[T]) prime() {
+	if !bc.isPrimed {
+		for !bc.r.Empty() && bc.r.Front().Empty() {
+			bc.r.PopFront()
+		}
+
+		for !bc.r.Empty() && bc.r.Back().Empty() {
+			bc.r.PopBack()
+		}
+
+		bc.isPrimed = true
+	}
+}
+
+func (bc *baseBidrectionalChain[T]) Empty() bool {
+	bc.prime()
+
+	return bc.r.Empty()
+}
+
+func (bc *baseBidrectionalChain[T]) Front() T {
+	bc.prime()
+
+	return bc.r.Front().Front()
+}
+
+func (bc *baseBidrectionalChain[T]) Back() T {
+	bc.prime()
+
+	return bc.r.Back().Back()
+}
+
+func (bc *baseBidrectionalChain[T]) saveOuter() BidirectionalRange[BidirectionalRange[T]] {
+	newList := make([]BidirectionalRange[T], 0)
+	r := bc.r.Save()
+
+	for !r.Empty() {
+		newList = append(newList, r.Front().SaveB())
+		r.PopFront()
+	}
+
+	return SliceRange(newList)
+}
+
+// flattenBidirectionalResult implements FlattenB
+type flattenBidirectionalResult[T any] struct {
+	baseBidrectionalChain[T]
+}
+
+func (fr *flattenBidirectionalResult[T]) PopFront() {
+	fr.prime()
+
+	fr.r.Front().PopFront()
+	fr.isPrimed = false
+}
+
+func (fr *flattenBidirectionalResult[T]) PopBack() {
+	fr.prime()
+
+	fr.r.Back().PopBack()
+	fr.isPrimed = false
+}
+
+func (fr *flattenBidirectionalResult[T]) Save() ForwardRange[T] {
+	return fr.SaveB()
+}
+
+func (fr *flattenBidirectionalResult[T]) SaveB() BidirectionalRange[T] {
+	return &flattenBidirectionalResult[T]{baseBidrectionalChain[T]{fr.saveOuter(), fr.isPrimed}}
+}
+
 // Flatten combines a range of ranges into one straight range
 func Flatten[T any](r InputRange[InputRange[T]]) InputRange[T] {
 	return &flattenResult[T]{baseChain[T]{r, false}}
@@ -130,14 +206,24 @@ func FlattenF[T any](r ForwardRange[ForwardRange[T]]) ForwardRange[T] {
 	return &flattenForwardResult[T]{baseForwardChain[T]{r, false}}
 }
 
-// FlattenS is `FlattenF` accepting a slice.
-func FlattenS[T any](r []ForwardRange[T]) ForwardRange[T] {
-	return FlattenF(SliceRange(r))
+// FlattenB is `FlattenF` that can be shrunk from the back.
+func FlattenB[T any](r BidirectionalRange[BidirectionalRange[T]]) BidirectionalRange[T] {
+	return &flattenBidirectionalResult[T]{baseBidrectionalChain[T]{r, false}}
 }
 
-// FlattenSS is `FlattenS` accepting a slice of slices.
-func FlattenSS[T any](r [][]T) ForwardRange[T] {
-	return FlattenF(MapS(r, SliceRange[T]))
+// FlattenS is `FlattenF` accepting a slice.
+func FlattenS[T any](r []ForwardRange[T]) ForwardRange[T] {
+	return FlattenF(F(SliceRange(r)))
+}
+
+// FlattenSB is `FlattenS` for bidirectional ranges.
+func FlattenSB[T any](r []BidirectionalRange[T]) BidirectionalRange[T] {
+	return FlattenB(SliceRange(r))
+}
+
+// FlattenSS is `FlattenB` accepting a slice of slices.
+func FlattenSS[T any](r [][]T) BidirectionalRange[T] {
+	return FlattenB(MapS(r, SliceRange[T]))
 }
 
 // FrontTransversal yields the first value in each range, skipping empty ranges.
@@ -157,10 +243,15 @@ func Chain[T any](ranges ...InputRange[T]) InputRange[T] {
 
 // ChainF is `Chain` where the range can be saved.
 func ChainF[T any](ranges ...ForwardRange[T]) ForwardRange[T] {
-	return FlattenF(SliceRange(ranges))
+	return FlattenF(F(SliceRange(ranges)))
 }
 
-// ChainS is `ChainF` accepting many slices.
-func ChainS[T any](ranges ...[]T) ForwardRange[T] {
-	return FlattenF(MapS(ranges, SliceRange[T]))
+// ChainB is `ChainF` that can be shrunk from the back.
+func ChainB[T any](ranges ...BidirectionalRange[T]) BidirectionalRange[T] {
+	return FlattenB(SliceRange(ranges))
+}
+
+// ChainS is `ChainB` accepting many slices.
+func ChainS[T any](ranges ...[]T) BidirectionalRange[T] {
+	return FlattenB(MapS(ranges, SliceRange[T]))
 }

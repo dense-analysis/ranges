@@ -12,10 +12,10 @@ func TestJoiner(t *testing.T) {
 			Cache(
 				Map(
 					I(Only("Mary", "has", "a", "little", "lamb")),
-					func(x string) InputRange[rune] { return I(Runes(x)) },
+					func(x string) InputRange[rune] { return I(F(Runes(x))) },
 				),
 			),
-			Runes("..."),
+			F(Runes("...")),
 		),
 	))
 
@@ -33,7 +33,7 @@ func TestJoinerF(t *testing.T) {
 					func(x string) ForwardRange[byte] { return Bytes(x) },
 				),
 			),
-			Bytes("..."),
+			F(Bytes("...")),
 		),
 	))
 
@@ -52,7 +52,7 @@ func TestJoinerS(t *testing.T) {
 				Runes("little"),
 				Runes("lamb"),
 			},
-			Runes("..."),
+			F(Runes("...")),
 		),
 	))
 

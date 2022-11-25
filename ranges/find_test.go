@@ -42,7 +42,7 @@ func TestFindComparableS(t *testing.T) {
 func TestFindEqual(t *testing.T) {
 	t.Parallel()
 
-	result := SliceF(FindEqual(Runes("hello world"), Eq[rune], Runes("or")))
+	result := SliceF(FindEqual(F(Runes("hello world")), Eq[rune], F(Runes("or"))))
 
 	assertEqual(t, string(result), "orld")
 
@@ -54,7 +54,7 @@ func TestFindEqual(t *testing.T) {
 func TestFindEqualS(t *testing.T) {
 	t.Parallel()
 
-	result := SliceF(FindEqualS([]rune("hello world"), Eq[rune], Runes("or")))
+	result := SliceF(FindEqualS([]rune("hello world"), Eq[rune], F(Runes("or"))))
 
 	assertEqual(t, string(result), "orld")
 }
@@ -62,7 +62,7 @@ func TestFindEqualS(t *testing.T) {
 func TestFindEqualComparable(t *testing.T) {
 	t.Parallel()
 
-	result := SliceF(FindEqualComparable(Runes("hello world"), Runes("or")))
+	result := SliceF(FindEqualComparable(F(Runes("hello world")), F(Runes("or"))))
 
 	assertEqual(t, string(result), "orld")
 
@@ -74,18 +74,18 @@ func TestFindEqualComparable(t *testing.T) {
 func TestFindEqualComparableS(t *testing.T) {
 	t.Parallel()
 
-	result := SliceF(FindEqualComparableS([]rune("hello world"), Runes("or")))
+	result := SliceF(FindEqualComparableS([]rune("hello world"), F(Runes("or"))))
 	assertEqual(t, string(result), "orld")
 }
 
 func TestFindAdjacent(t *testing.T) {
 	t.Parallel()
 
-	result := SliceF(FindAdjacent(Runes("abba"), Eq[rune]))
+	result := SliceF(FindAdjacent(F(Runes("abba")), Eq[rune]))
 
 	assertEqual(t, string(result), "bba")
 
-	result2 := SliceF(FindAdjacent(Runes("abc"), Eq[rune]))
+	result2 := SliceF(FindAdjacent(F(Runes("abc")), Eq[rune]))
 
 	assertEqual(t, string(result2), "")
 
@@ -104,11 +104,11 @@ func TestFindAdjacentS(t *testing.T) {
 func TestFindAdjacentComparable(t *testing.T) {
 	t.Parallel()
 
-	result := SliceF(FindAdjacentComparable(Runes("abba")))
+	result := SliceF(FindAdjacentComparable(F(Runes("abba"))))
 
 	assertEqual(t, string(result), "bba")
 
-	result2 := SliceF(FindAdjacentComparable(Runes("abc")))
+	result2 := SliceF(FindAdjacentComparable(F(Runes("abc"))))
 
 	assertEqual(t, string(result2), "")
 
@@ -127,7 +127,7 @@ func TestFindAdjacentComparableS(t *testing.T) {
 func TestFindAmong(t *testing.T) {
 	t.Parallel()
 
-	result := Slice(FindAmong(I(Runes("abcd")), Eq[rune], Runes("qcx")))
+	result := Slice(FindAmong(I(F(Runes("abcd"))), Eq[rune], F(Runes("qcx"))))
 
 	assertEqual(t, string(result), "cd")
 }
@@ -135,16 +135,16 @@ func TestFindAmong(t *testing.T) {
 func TestFindAmongF(t *testing.T) {
 	t.Parallel()
 
-	result := SliceF(FindAmongF(Runes("abcd"), Eq[rune], Runes("qcx")))
+	result := SliceF(FindAmongF(F(Runes("abcd")), Eq[rune], F(Runes("qcx"))))
 
 	assertEqual(t, string(result), "cd")
-	assertHasSaveableFront(t, FindAmongF(Runes("abcd"), Eq[rune], Runes("qcx")), 'c')
+	assertHasSaveableFront(t, FindAmongF(F(Runes("abcd")), Eq[rune], F(Runes("qcx"))), 'c')
 }
 
 func TestFindAmongS(t *testing.T) {
 	t.Parallel()
 
-	result := SliceF(FindAmongS([]rune("abcd"), Eq[rune], Runes("qcx")))
+	result := SliceF(FindAmongS([]rune("abcd"), Eq[rune], F(Runes("qcx"))))
 
 	assertEqual(t, string(result), "cd")
 }
@@ -152,7 +152,7 @@ func TestFindAmongS(t *testing.T) {
 func TestFindAmongComparable(t *testing.T) {
 	t.Parallel()
 
-	result := Slice(FindAmongComparable(I(Runes("abcd")), Runes("qcx")))
+	result := Slice(FindAmongComparable(I(F(Runes("abcd"))), F(Runes("qcx"))))
 
 	assertEqual(t, string(result), "cd")
 }
@@ -160,16 +160,16 @@ func TestFindAmongComparable(t *testing.T) {
 func TestFindAmongComparableF(t *testing.T) {
 	t.Parallel()
 
-	result := SliceF(FindAmongComparableF(Runes("abcd"), Runes("qcx")))
+	result := SliceF(FindAmongComparableF(F(Runes("abcd")), F(Runes("qcx"))))
 
 	assertEqual(t, string(result), "cd")
-	assertHasSaveableFront(t, FindAmongComparableF(Runes("abcd"), Runes("qcx")), 'c')
+	assertHasSaveableFront(t, FindAmongComparableF(F(Runes("abcd")), F(Runes("qcx"))), 'c')
 }
 
 func TestFindAmongComparableS(t *testing.T) {
 	t.Parallel()
 
-	result := SliceF(FindAmongComparableS([]rune("abcd"), Runes("qcx")))
+	result := SliceF(FindAmongComparableS([]rune("abcd"), F(Runes("qcx"))))
 
 	assertEqual(t, string(result), "cd")
 }

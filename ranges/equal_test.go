@@ -107,7 +107,7 @@ func TestEqualSInts(t *testing.T) {
 func TestEqualRunes(t *testing.T) {
 	t.Parallel()
 
-	if !Equal(I(Runes("abc")), I(Runes("abc")), Eq[rune]) {
+	if !Equal(I(F(Runes("abc"))), I(F(Runes("abc"))), Eq[rune]) {
 		t.Error("abc comparison failed")
 	}
 }

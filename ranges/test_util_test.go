@@ -39,6 +39,11 @@ func assertEmptyF[T any](t *testing.T, r ForwardRange[T]) {
 	assertEmpty[T](t, r)
 }
 
+func assertEmptyB[T any](t *testing.T, r BidirectionalRange[T]) {
+	t.Helper()
+	assertEmpty[T](t, r)
+}
+
 func assertNotEmpty[T any](t *testing.T, r InputRange[T]) {
 	t.Helper()
 
@@ -48,6 +53,11 @@ func assertNotEmpty[T any](t *testing.T, r InputRange[T]) {
 }
 
 func assertNotEmptyF[T any](t *testing.T, r ForwardRange[T]) {
+	t.Helper()
+	assertNotEmpty[T](t, r)
+}
+
+func assertNotEmptyB[T any](t *testing.T, r BidirectionalRange[T]) {
 	t.Helper()
 	assertNotEmpty[T](t, r)
 }
@@ -71,6 +81,11 @@ func assertHasFrontF[T any](t *testing.T, r ForwardRange[T], value T) {
 	assertHasFront[T](t, r, value)
 }
 
+func assertHasFrontB[T any](t *testing.T, r BidirectionalRange[T], value T) {
+	t.Helper()
+	assertHasFront[T](t, r, value)
+}
+
 func assertHasSaveableFront[T any](t *testing.T, r ForwardRange[T], value T) {
 	t.Helper()
 	assertHasFront[T](t, r, value)
@@ -79,4 +94,9 @@ func assertHasSaveableFront[T any](t *testing.T, r ForwardRange[T], value T) {
 	r.PopFront()
 
 	assertHasFront[T](t, rSave, value)
+}
+
+func assertHasSaveableFrontB[T any](t *testing.T, r BidirectionalRange[T], value T) {
+	t.Helper()
+	assertHasSaveableFront(t, r.(ForwardRange[T]), value)
 }

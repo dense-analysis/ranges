@@ -1,8 +1,8 @@
 package ranges
 
 type filterResult[T any] struct {
-	cb func(element T) bool
-	ir InputRange[T]
+	cb       func(element T) bool
+	ir       InputRange[T]
 	isPrimed bool
 }
 
@@ -60,5 +60,5 @@ func FilterF[T any](r ForwardRange[T], cb func(element T) bool) ForwardRange[T] 
 
 // FilterS is `FilterF` accepting a slice.
 func FilterS[T any](slice []T, cb func(element T) bool) ForwardRange[T] {
-	return FilterF(SliceRange(slice), cb)
+	return FilterF(F(SliceRange(slice)), cb)
 }

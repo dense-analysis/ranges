@@ -57,3 +57,14 @@ type ForwardRange[T any] interface {
 
 // I is a convenience function for passing a ForwardRange as an InputRange.
 func I[T any](r ForwardRange[T]) InputRange[T] { return r }
+
+// BidirectionalRange is a ForwardRange that can be accessed from both directions.
+type BidirectionalRange[T any] interface {
+	ForwardRange[T]
+	SaveB() BidirectionalRange[T]
+	Back() T
+	PopBack()
+}
+
+// F is a convenience function for passing a BidirectionalRange as a ForwardRange
+func F[T any](r BidirectionalRange[T]) ForwardRange[T] { return r }

@@ -71,7 +71,7 @@ func UniqF[T any](r ForwardRange[T], cb func(a, b T) bool) ForwardRange[T] {
 
 // UniqS is `UniqF` accepting a slice.
 func UniqS[T any](r []T, cb func(a, b T) bool) ForwardRange[T] {
-	return UniqF(SliceRange(r), cb)
+	return UniqF(F(SliceRange(r)), cb)
 }
 
 // UniqComparable removes adjacent entries where `a == b`
@@ -86,5 +86,5 @@ func UniqComparableF[T comparable](r ForwardRange[T]) ForwardRange[T] {
 
 // UniqComparableS is `UniqComparableF` accepting a slice.
 func UniqComparableS[T comparable](r []T) ForwardRange[T] {
-	return UniqComparableF(SliceRange(r))
+	return UniqComparableF(F(SliceRange(r)))
 }

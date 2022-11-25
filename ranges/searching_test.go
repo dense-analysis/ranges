@@ -81,23 +81,23 @@ func TestStartsWith(t *testing.T) {
 func TestSkipOver(t *testing.T) {
 	t.Parallel()
 
-	empty := Runes("")
+	empty := F(Runes(""))
 
-	if !SkipOver(&empty, I(Runes("xyz")), Eq[rune]) {
+	if !SkipOver(&empty, I(F(Runes("xyz"))), Eq[rune]) {
 		t.Error("SkipOver(\"\", \"xyz\") != true")
 	}
 
-	if !SkipOver(nil, I(Runes("xyz")), Eq[rune]) {
+	if !SkipOver(nil, I(F(Runes("xyz"))), Eq[rune]) {
 		t.Error("SkipOver(nil, \"xyz\") != true")
 	}
 
-	r1 := Runes("Hello world")
+	r1 := F(Runes("Hello world"))
 
-	if SkipOver(&r1, I(Runes("Ha")), Eq[rune]) {
+	if SkipOver(&r1, I(F(Runes("Ha"))), Eq[rune]) {
 		t.Fatal("SkipOver(\"Hello world\", \"Ha\") != false")
 	}
 
-	if !SkipOver(&r1, I(Runes("Hell")), Eq[rune]) {
+	if !SkipOver(&r1, I(F(Runes("Hell"))), Eq[rune]) {
 		t.Fatal("SkipOver(\"Hello world\", \"Hell\") != true")
 	}
 

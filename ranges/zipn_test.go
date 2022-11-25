@@ -15,7 +15,7 @@ func TestZipN(t *testing.T) {
 			func(e []any) []int {
 				return SliceF(
 					MapF(
-						SliceRange(e),
+						F(SliceRange(e)),
 						func(x any) int { return x.(int) },
 					),
 				)

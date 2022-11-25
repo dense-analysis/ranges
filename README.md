@@ -9,11 +9,15 @@ Go, for fun and to experiment with what is possible in Go 1.18.
 * `HasLength` - Any type with a `Length`
 * `OutputRange[T any]` - Any type you can write to with `Put`
 * `InputRange[T any]` - Any type you can iterate over once.
-* `ForwardRange[T any]` - Any type you iterate over many times.
+* `ForwardRange[T any]` - `InputRange[T]` you can iterate over many times.
+* `BidirectionalRange[T any]` - `ForwardRange[T]` you can iterate from the back.
 * `RealNumber` - Any basic real number type.
 
-Due to limitations in Go, the function `I` is available to return
-`ForwardRange[T]` as `InputRange[T]` to make life easier.
+Due to limitations in Go, the following convenience functions are available to
+convert sub types of range to their base types.
+
+* `I` - Returns `ForwardRange[T]` as `InputRange[T]`.
+* `F` - Returns `BidirectionalRange[T]` as `ForwardRange[T]`.
 
 ### Tuple Types
 
@@ -34,7 +38,8 @@ numbers of items. This library has the following:
 
 Nearly all algorithms accepting or producing `InputRange` can accept or produce
 a `ForwardRange` instead by calling a variation of the function with an `F`
-suffix. Some functions such as `Map` can be called with shortcuts for slices
+suffix. Most algorithms that can accept or produce a `ForwardRange` can accept
+or produce a `BidirectionalRange` with a `B` suffix. Some functions such as `Map` can be called with shortcuts for slices
 with an `S` suffix.
 
 * `operators`
@@ -57,8 +62,10 @@ with an `S` suffix.
   * `Enumerate` - Yields elements with indexes (`Pair[int, T]`) from `0`.
   * `EnumerateN` - `Enumerate` with a provided start index.
   * `Flatten` - Produces an `InputRange` from a range of ranges.
+  * `FlattenSB` - A special variation to flatten a slice of
+    `BidirectionalRange`s into a `BidirectionalRange.
   * `FlattenSS` - A special variation to flatten a slice of slices into a
-    `ForwardRange.
+    `BidirectionalRange.
   * `FrontTransversal` - Produces an `InputRange` iterating over the first value
     of every non-empty range in a range of ranges.
   * `Generate` - Creates an infinite `ForwardRange` by calling a function
@@ -91,12 +98,12 @@ with an `S` suffix.
   * `NullSink` - Creates an `OutputRange` that discards all data.
   * `SliceSink` - Creates an `OutputRange` that appends to the given slice.
 * `slices`
-  * `Bytes` - Produces `ForwardRange[byte]` from a `string` like `[]byte(s)`
-  * `Runes` - Produces `ForwardRange[rune]` from a `string` like `[]rune(s)`
-  * `SliceRange` - Produces `ForwardRange[T]` from `[]T`
-  * `SliceRetro` - Produces `ForwardRange[T]` from `[]T` in reverse.
-  * `SlicePtrRange` - Produces a `ForwardRange[*T]` from `[]T`
-  * `SlicePtrRetro` - Produces a `ForwardRange[*T]` from `[]T` in reverse.
+  * `Bytes` - Produces `BidirectionalRange[byte]` from a `string` like `[]byte(s)`
+  * `Runes` - Produces `BidirectionalRange[rune]` from a `string` like `[]rune(s)`
+  * `SliceRange` - Produces `BidirectionalRange[T]` from `[]T`
+  * `SliceRetro` - Produces `BidirectionalRange[T]` from `[]T` in reverse.
+  * `SlicePtrRange` - Produces a `BidirectionalRange[*T]` from `[]T`
+  * `SlicePtrRetro` - Produces a `BidirectionalRange[*T]` from `[]T` in reverse.
   * `Slice` - Produces `[]T` from `InputRange[T]`
   * `String` - Produces `string` from `InputRange[rune]`
 * `comparison`

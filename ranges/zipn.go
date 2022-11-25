@@ -9,7 +9,7 @@ func (z *zipNResult) Empty() bool {
 }
 
 func (z *zipNResult) Front() []any {
-	return SliceF(MapS(z.ranges, InputRange[any].Front))
+	return SliceB(MapS(z.ranges, InputRange[any].Front))
 }
 
 func (z *zipNResult) PopFront() {

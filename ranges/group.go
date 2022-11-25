@@ -10,7 +10,7 @@ func Group[T any](r InputRange[T], cb func(a, b T) bool) InputRange[Pair[T, int]
 
 // GroupS is `Group` accepting a slice.
 func GroupS[T any](r []T, cb func(a, b T) bool) InputRange[Pair[T, int]] {
-	return Group(I(SliceRange(r)), cb)
+	return Group(I(F(SliceRange(r))), cb)
 }
 
 // GroupComparable is `Group` where `a == b`
@@ -20,5 +20,5 @@ func GroupComparable[T comparable](r InputRange[T]) InputRange[Pair[T, int]] {
 
 // GroupComparableS is `GroupComparable` accepting a slice.
 func GroupComparableS[T comparable](r []T) InputRange[Pair[T, int]] {
-	return GroupComparable(I(SliceRange(r)))
+	return GroupComparable(I(F(SliceRange(r))))
 }

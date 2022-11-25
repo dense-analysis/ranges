@@ -5,7 +5,7 @@ import "testing"
 func TestCommonPrefix(t *testing.T) {
 	t.Parallel()
 
-	result := String(CommonPrefix(Runes("hello, world"), I(Runes("hello, there")), Eq[rune]))
+	result := String(CommonPrefix(F(Runes("hello, world")), I(F(Runes("hello, there"))), Eq[rune]))
 
 	assertEqual(t, result, "hello, ")
 }
@@ -13,7 +13,7 @@ func TestCommonPrefix(t *testing.T) {
 func TestCommonPrefixF(t *testing.T) {
 	t.Parallel()
 
-	result := String(CommonPrefixF(Runes("hello, world"), Runes("hello, there"), Eq[rune]))
+	result := String(CommonPrefixF(F(Runes("hello, world")), F(Runes("hello, there")), Eq[rune]))
 
 	assertEqual(t, result, "hello, ")
 }

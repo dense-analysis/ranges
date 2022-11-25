@@ -24,7 +24,7 @@ func TestEmptyNilSliceRange(t *testing.T) {
 
 	r := SliceRange([]int(nil))
 
-	assertEmptyF(t, r)
+	assertEmptyB(t, r)
 }
 
 func TestSlicePopFront(t *testing.T) {
@@ -79,7 +79,7 @@ func TestEmptyNilSliceRetroRange(t *testing.T) {
 
 	r := SliceRetroRange([]int(nil))
 
-	assertEmptyF(t, r)
+	assertEmptyB(t, r)
 }
 
 func TestSliceRetroRangeSave(t *testing.T) {
@@ -119,7 +119,7 @@ func TestEmptyNilSlicePtrRange(t *testing.T) {
 
 	r := SlicePtrRange([]int(nil))
 
-	assertEmptyF(t, r)
+	assertEmptyB(t, r)
 }
 
 func TestSlicePtrRangeSave(t *testing.T) {
@@ -159,7 +159,7 @@ func TestEmptyNilSlicePtrRetroRange(t *testing.T) {
 
 	r := SlicePtrRetroRange([]int(nil))
 
-	assertEmptyF(t, r)
+	assertEmptyB(t, r)
 }
 
 func TestSlicePtrRetroRangeSave(t *testing.T) {
@@ -188,7 +188,7 @@ func TestSlice(t *testing.T) {
 func TestSliceF(t *testing.T) {
 	t.Parallel()
 
-	sliceCopy := SliceF(SliceRange([]int{1, 2, 3}))
+	sliceCopy := SliceF(F(SliceRange([]int{1, 2, 3})))
 
 	assertEqual(t, sliceCopy, []int{1, 2, 3})
 }
@@ -196,7 +196,7 @@ func TestSliceF(t *testing.T) {
 func TestBytes(t *testing.T) {
 	t.Parallel()
 
-	if string(SliceF(Bytes("abc"))) != "abc" {
+	if string(SliceB(Bytes("abc"))) != "abc" {
 		t.Error("Bytes did not represent the string correctly")
 	}
 }
@@ -224,13 +224,13 @@ func TestRunes(t *testing.T) {
 
 	r.PopFront()
 
-	assertEmptyF(t, r)
+	assertEmptyB(t, r)
 }
 
 func TestRunesToString(t *testing.T) {
 	t.Parallel()
 
-	if string(SliceF(Runes("日本語"))) != "日本語" {
+	if string(SliceB(Runes("日本語"))) != "日本語" {
 		t.Error("We couldn't covert a string to runes and back again")
 	}
 

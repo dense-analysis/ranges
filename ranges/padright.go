@@ -1,8 +1,8 @@
 package ranges
 
 type padRightResult[T any] struct {
-	r InputRange[T]
-	value T
+	r         InputRange[T]
+	value     T
 	remaining int
 }
 
@@ -66,5 +66,5 @@ func PadRightF[T any](r ForwardRange[T], value T, count int) ForwardRange[T] {
 
 // PadRightS is `PadRightF` accepting a slice
 func PadRightS[T any](r []T, value T, count int) ForwardRange[T] {
-	return PadRightF(SliceRange(r), value, count)
+	return PadRightF(F(SliceRange(r)), value, count)
 }
