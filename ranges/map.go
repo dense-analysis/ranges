@@ -43,7 +43,7 @@ func MapF[T any, U any](r ForwardRange[T], cb func(a T) U) ForwardRange[U] {
 	return &forwardMapResult[T, U]{mapResult[T, U]{cb, r}}
 }
 
-// MapB is `MapF`, that can be shrunk from the back.
+// MapB is `MapF` that can be shrunk from the back.
 func MapB[T any, U any](r BidirectionalRange[T], cb func(a T) U) BidirectionalRange[U] {
 	return &bidirectionalMapResult[T, U]{
 		forwardMapResult[T, U]{mapResult[T, U]{cb, r}},
@@ -52,5 +52,5 @@ func MapB[T any, U any](r BidirectionalRange[T], cb func(a T) U) BidirectionalRa
 
 // MapS is `MapB` accepting a slice.
 func MapS[T any, U any](r []T, cb func(a T) U) BidirectionalRange[U] {
-	return MapB[T, U](SliceRange(r), cb)
+	return MapB(SliceRange(r), cb)
 }
