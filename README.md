@@ -90,7 +90,7 @@ with an `S` suffix.
   * `Stride` - Produces every `step` element in an `InputRange`.
   * `Take` - Takes up to a number of elements from a range.
   * `Tee` - Produces an `InputRange` that produces elements from a given range
-    and outputs values to a given `OutpuRange` when elements are popped.
+    and outputs values to a given `OutputRange` when elements are popped.
   * `ZipN` - Produce a range stepping over `N` ranges in parallel. There are
     several `Zip` functions for different numbers of arguments.
 * `output`
