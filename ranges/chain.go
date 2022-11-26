@@ -151,12 +151,6 @@ func (bc *baseBidrectionalChain[T]) Front() T {
 	return bc.r.Front().Front()
 }
 
-func (bc *baseBidrectionalChain[T]) Back() T {
-	bc.prime()
-
-	return bc.r.Back().Back()
-}
-
 func (bc *baseBidrectionalChain[T]) saveOuter() BidirectionalRange[BidirectionalRange[T]] {
 	newList := make([]BidirectionalRange[T], 0)
 	r := bc.r.Save()
@@ -181,6 +175,12 @@ func (fr *flattenBidirectionalResult[T]) PopFront() {
 	fr.isPrimed = false
 }
 
+func (fr *flattenBidirectionalResult[T]) Back() T {
+	fr.prime()
+
+	return fr.r.Back().Back()
+}
+
 func (fr *flattenBidirectionalResult[T]) PopBack() {
 	fr.prime()
 
@@ -194,6 +194,37 @@ func (fr *flattenBidirectionalResult[T]) Save() ForwardRange[T] {
 
 func (fr *flattenBidirectionalResult[T]) SaveB() BidirectionalRange[T] {
 	return &flattenBidirectionalResult[T]{baseBidrectionalChain[T]{fr.saveOuter(), fr.isPrimed}}
+}
+
+// frontTransversalBidirectionalResult implments FrontTraveralB
+type frontTransversalBidirectionalResult[T any] struct {
+	baseBidrectionalChain[T]
+}
+
+func (fr *frontTransversalBidirectionalResult[T]) PopFront() {
+	fr.prime()
+	fr.r.PopFront()
+	fr.isPrimed = false
+}
+
+func (fr *frontTransversalBidirectionalResult[T]) Back() T {
+	fr.prime()
+
+	return fr.r.Back().Front()
+}
+
+func (fr *frontTransversalBidirectionalResult[T]) PopBack() {
+	fr.prime()
+	fr.r.PopBack()
+	fr.isPrimed = false
+}
+
+func (fr *frontTransversalBidirectionalResult[T]) Save() ForwardRange[T] {
+	return fr.SaveB()
+}
+
+func (fr *frontTransversalBidirectionalResult[T]) SaveB() BidirectionalRange[T] {
+	return &frontTransversalBidirectionalResult[T]{baseBidrectionalChain[T]{fr.saveOuter(), fr.isPrimed}}
 }
 
 // Flatten combines a range of ranges into one straight range
@@ -234,6 +265,11 @@ func FrontTransversal[T any](r InputRange[InputRange[T]]) InputRange[T] {
 // FrontTransversalF is `FrontTransversal` where the range can be saved.
 func FrontTransversalF[T any](r ForwardRange[ForwardRange[T]]) ForwardRange[T] {
 	return &frontTransversalForwardResult[T]{baseForwardChain[T]{r, false}}
+}
+
+// FrontTransversalB is `FrontTransversalF` that can be shrunk from the back.
+func FrontTransversalB[T any](r BidirectionalRange[BidirectionalRange[T]]) BidirectionalRange[T] {
+	return &frontTransversalBidirectionalResult[T]{baseBidrectionalChain[T]{r, false}}
 }
 
 // Chain produces the results of all the ranges together in a sequence.

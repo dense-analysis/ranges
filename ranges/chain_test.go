@@ -104,6 +104,10 @@ func TestChainB(t *testing.T) {
 
 	assertEqual(t, SliceB(chain), []int{1, 2, 3})
 	assertEqual(t, SliceB(savedChain), []int{1, 2, 3})
+
+	chain2 := ChainB(Only(1, 2), Null[int](), Only(3, 4), Null[int]())
+
+	assertEqual(t, SliceB(Retro(chain2)), []int{4, 3, 2, 1})
 }
 
 func TestChainBIsLazy(t *testing.T) {
@@ -163,4 +167,48 @@ func TestFrontTransversalF(t *testing.T) {
 
 	assertEqual(t, SliceF(transversal), []int{3, 5})
 	assertEqual(t, SliceF(savedTransversal), []int{3, 5})
+}
+
+func TestFrontTransversalB(t *testing.T) {
+	t.Parallel()
+
+	empty := FrontTransversalB(Null[BidirectionalRange[int]]())
+
+	if !empty.Empty() {
+		t.Fatal("An empty transversal was not empty")
+	}
+
+	transversal := FrontTransversalB(
+		Only(
+			Only(1, 2),
+			Only[int](),
+			Only(3, 4),
+			Only[int](),
+			Only(5, 6),
+			Only[int](),
+		),
+	)
+
+	transversal.PopFront()
+	savedTransversal := transversal.SaveB()
+
+	assertEqual(t, SliceB(transversal), []int{3, 5})
+	assertEqual(t, SliceB(savedTransversal), []int{3, 5})
+
+	transversal2 := FrontTransversalB(
+		Only(
+			Only(1, 2),
+			Only[int](),
+			Only(3, 4),
+			Only[int](),
+			Only(5, 6),
+			Only[int](),
+		),
+	)
+
+	transversal2.PopBack()
+	savedTransversal2 := transversal2.SaveB()
+
+	assertEqual(t, SliceB(Retro(transversal2)), []int{3, 1})
+	assertEqual(t, SliceB(Retro(savedTransversal2)), []int{3, 1})
 }
