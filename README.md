@@ -70,7 +70,7 @@ with an `S` suffix.
     of every non-empty range in a range of ranges.
   * `Generate` - Creates an infinite `BidirectionalRange` by calling a function
     repeatedly.
-  * `Iota` - A `ForwardRange` producing values from `0` value up to and
+  * `Iota` - A `BidirectionalRange` producing values from `0` value up to and
     excluding an `end` value, incrementing by `1`.
   * `IotaStart` - `Iota` with a given `start` value to use in place of `0`.
   * `IotaStep` - `IotaStart` with a `step` value to use in place of `1`.

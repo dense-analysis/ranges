@@ -7,22 +7,22 @@ func TestSlide(t *testing.T) {
 
 	assertEqual(
 		t,
-		SliceF(MapF(SlideStep(Iota(5), 3, 3), SliceF[int])),
+		SliceF(MapF(SlideStep(F(Iota(5)), 3, 3), SliceF[int])),
 		[][]int{{0, 1, 2}, {3, 4}},
 	)
 	assertEqual(
 		t,
-		SliceF(MapF(Slide(Iota(5), 3), SliceF[int])),
+		SliceF(MapF(Slide(F(Iota(5)), 3), SliceF[int])),
 		[][]int{{0, 1, 2}, {1, 2, 3}, {2, 3, 4}},
 	)
 	assertEqual(
 		t,
-		SliceF(MapF(SlideStep(Iota(5), 3, 2), SliceF[int])),
+		SliceF(MapF(SlideStep(F(Iota(5)), 3, 2), SliceF[int])),
 		[][]int{{0, 1, 2}, {2, 3, 4}},
 	)
 	assertEqual(
 		t,
-		SliceF(MapF(SlideStep(Iota(5), 2, 2), SliceF[int])),
+		SliceF(MapF(SlideStep(F(Iota(5)), 2, 2), SliceF[int])),
 		[][]int{{0, 1}, {2, 3}},
 	)
 }
@@ -30,7 +30,7 @@ func TestSlide(t *testing.T) {
 func TestSlidePoppingAndSaving(t *testing.T) {
 	t.Parallel()
 
-	r := Slide(Iota(5), 3)
+	r := Slide(F(Iota(5)), 3)
 	r2 := r.Save()
 
 	r.PopFront()
