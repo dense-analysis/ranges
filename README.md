@@ -68,7 +68,7 @@ with an `S` suffix.
     `BidirectionalRange.
   * `FrontTransversal` - Produces an `InputRange` iterating over the first value
     of every non-empty range in a range of ranges.
-  * `Generate` - Creates an infinite `ForwardRange` by calling a function
+  * `Generate` - Creates an infinite `BidirectionalRange` by calling a function
     repeatedly.
   * `Iota` - A `ForwardRange` producing values from `0` value up to and
     excluding an `end` value, incrementing by `1`.
@@ -79,7 +79,7 @@ with an `S` suffix.
   * `Only` - Returns a `BidirectionalRange` through the arguments provided.
   * `PadRight` - Produces an `InputRange` with up to `count` items by padding
     the range with a given value.
-  * `Repeat` - Creates an infinite `ForwardRange` repeating a value.
+  * `Repeat` - Creates an infinite `BidirectionalRange` repeating a value.
   * `Retro` - Returns a reversed `BidirectionalRange`.
   * `RoundRobin` - Produces an `InputRange` iterating over the first value of
     every non-empty range in a range of ranges in a cycle until all ranges are

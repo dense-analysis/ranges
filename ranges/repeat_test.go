@@ -7,23 +7,19 @@ func TestRepeat(t *testing.T) {
 
 	repeater := Repeat(3)
 
-	assertHasFrontF(t, repeater, 3)
-	assertNotEmptyF(t, repeater)
-	repeater.PopFront()
+	for i := 0; i < 3; i++ {
+		assertHasFrontB(t, repeater, 3)
+		assertNotEmptyB(t, repeater)
+		repeater.PopFront()
+	}
 
-	assertHasFrontF(t, repeater, 3)
-	assertNotEmptyF(t, repeater)
-	repeater.PopFront()
+	repeater = repeater.SaveB()
 
-	assertHasFrontF(t, repeater, 3)
-	assertNotEmptyF(t, repeater)
-	repeater.PopFront()
-
-	repeater = repeater.Save()
-
-	assertHasFrontF(t, repeater, 3)
-	assertNotEmptyF(t, repeater)
-	repeater.PopFront()
+	for i := 0; i < 3; i++ {
+		assertHasBack(t, repeater, 3)
+		assertNotEmptyB(t, repeater)
+		repeater.PopBack()
+	}
 }
 
 func TestGenerate(t *testing.T) {
@@ -31,21 +27,17 @@ func TestGenerate(t *testing.T) {
 
 	generator := Generate(func() int { return 3 })
 
-	assertHasFrontF(t, generator, 3)
-	assertNotEmptyF(t, generator)
-	generator.PopFront()
+	for i := 0; i < 3; i++ {
+		assertHasFrontB(t, generator, 3)
+		assertNotEmptyB(t, generator)
+		generator.PopFront()
+	}
 
-	assertHasFrontF(t, generator, 3)
-	assertNotEmptyF(t, generator)
-	generator.PopFront()
+	generator = generator.SaveB()
 
-	assertHasFrontF(t, generator, 3)
-	assertNotEmptyF(t, generator)
-	generator.PopFront()
-
-	generator = generator.Save()
-
-	assertHasFrontF(t, generator, 3)
-	assertNotEmptyF(t, generator)
-	generator.PopFront()
+	for i := 0; i < 3; i++ {
+		assertHasBack(t, generator, 3)
+		assertNotEmptyB(t, generator)
+		generator.PopBack()
+	}
 }
