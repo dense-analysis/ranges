@@ -131,12 +131,11 @@ with an `S` suffix.
   * `Mismatch` - Eagerly advances all ranges until the first element is found
     where any two elements are not equal according to a callback.
 * `iteration`
-  * `Cache` - Eagerly evaluates the first element of a range and caches results
-    in an `InputRange` so `Front()` will be called only once per element on the
-    original range.
-  * `CacheF` - Eagerly evaluates the first element of a `ForwardRange` and
-    caches results so `Front()` will only be called once per element on the
-    original range, unless the range is saved and traversed over multiple times.
+  * `Cache` - Caches results in an `InputRange` so `Front()` will be called only
+    once per element on the original range.
+  * `CacheF` - Caches results so `Front()` will only be called once per element
+    on the original range, unless the range is saved and traversed over multiple
+    times.
   * `ChunkBy` - Returns an `InputRange` that splits a range into sub-ranges
     when `cb(a, b)` returns `false`.
   * `ChunkByValue` Returns an `InputRange` that splits a range into sub-ranges

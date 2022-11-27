@@ -1,8 +1,9 @@
 package ranges
 
 type cacheResult[T any] struct {
-	r     InputRange[T]
-	value T
+	r        InputRange[T]
+	value    T
+	isPrimed bool
 }
 
 func (c *cacheResult[T]) Empty() bool {
@@ -10,8 +11,9 @@ func (c *cacheResult[T]) Empty() bool {
 }
 
 func (c *cacheResult[T]) Front() T {
-	if c.r.Empty() {
-		panic("Front() called on empty Cache result")
+	if !c.isPrimed {
+		c.value = c.r.Front()
+		c.isPrimed = true
 	}
 
 	return c.value
@@ -19,10 +21,7 @@ func (c *cacheResult[T]) Front() T {
 
 func (c *cacheResult[T]) PopFront() {
 	c.r.PopFront()
-
-	if !c.r.Empty() {
-		c.value = c.r.Front()
-	}
+	c.isPrimed = false
 }
 
 type cacheForwardResult[T any] struct {
@@ -30,17 +29,13 @@ type cacheForwardResult[T any] struct {
 }
 
 func (c *cacheForwardResult[T]) Save() ForwardRange[T] {
-	return &cacheForwardResult[T]{cacheResult[T]{c.r.(ForwardRange[T]).Save(), c.value}}
+	return &cacheForwardResult[T]{cacheResult[T]{c.r.(ForwardRange[T]).Save(), c.value, c.isPrimed}}
 }
 
 // Cache eagerly caches the first element in a range and caches values so
 // `Front()` is only called once per element for the original range.
 func Cache[T any](r InputRange[T]) InputRange[T] {
-	if r.Empty() {
-		return Null[T]()
-	}
-
-	return &cacheResult[T]{r, r.Front()}
+	return &cacheResult[T]{r, *new(T), false}
 }
 
 // CacheF is `Cache` for forward ranges.
@@ -48,9 +43,5 @@ func Cache[T any](r InputRange[T]) InputRange[T] {
 // If the range is traversed once, `Front()` will be called once per element.
 // If the range is saved, `Front()` will be called multiple times.
 func CacheF[T any](r ForwardRange[T]) ForwardRange[T] {
-	if r.Empty() {
-		return Null[T]()
-	}
-
-	return &cacheForwardResult[T]{cacheResult[T]{r, r.Front()}}
+	return &cacheForwardResult[T]{cacheResult[T]{r, *new(T), false}}
 }

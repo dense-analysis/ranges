@@ -50,7 +50,12 @@ func TestCacheF(t *testing.T) {
 	r.PopFront()
 
 	r2Save.Front()
+	r2Save.Front()
 	r2Save.PopFront()
 
-	assertEqual(t, storedValues, []int{5, 6, 7, 7})
+	r.Front()
+	r.Front()
+	r.PopFront()
+
+	assertEqual(t, storedValues, []int{5, 6, 6, 7})
 }
