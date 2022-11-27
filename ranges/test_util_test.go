@@ -120,7 +120,7 @@ func assertHasSaveableBack[T any](t *testing.T, r BidirectionalRange[T], value T
 	assertHasBack(t, r, value)
 
 	rSave := r.SaveB()
-	r.PopFront()
+	r.PopBack()
 
 	assertHasBack(t, rSave, value)
 }

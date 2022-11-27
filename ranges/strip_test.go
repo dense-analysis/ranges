@@ -34,6 +34,15 @@ func TestStripLeftComparableF(t *testing.T) {
 	assertHasSaveableFront(t, result2, 3)
 }
 
+func TestStripLeftComparableB(t *testing.T) {
+	t.Parallel()
+
+	r := StripLeftComparableB(Only(5, 5, 3, 5, 2), 5)
+
+	assertHasSaveableBack(t, r, 2)
+	assertEqual(t, SliceB(Retro(r)), []int{5, 3})
+}
+
 func TestStripLeftComparableS(t *testing.T) {
 	t.Parallel()
 
@@ -68,4 +77,13 @@ func TestStripLeftF(t *testing.T) {
 	result2 := StripLeftF(F(Only(5, 5, 3, 5, 2)), func(a int) bool { return a == 5 })
 
 	assertHasSaveableFront(t, result2, 3)
+}
+
+func TestStripLeftB(t *testing.T) {
+	t.Parallel()
+
+	r := StripLeftB(Only(5, 5, 3, 5, 2), func(a int) bool { return a == 5 })
+
+	assertHasSaveableBack(t, r, 2)
+	assertEqual(t, SliceB(Retro(r)), []int{5, 3})
 }
