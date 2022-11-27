@@ -32,6 +32,38 @@ func (c *cacheForwardResult[T]) Save() ForwardRange[T] {
 	return &cacheForwardResult[T]{cacheResult[T]{c.r.(ForwardRange[T]).Save(), c.value, c.isPrimed}}
 }
 
+type cacheBidirectionalResult[T any] struct {
+	cacheResult[T]
+	backValue    T
+	backIsPrimed bool
+}
+
+func (c *cacheBidirectionalResult[T]) Back() T {
+	if !c.backIsPrimed {
+		c.backValue = c.r.(BidirectionalRange[T]).Back()
+		c.backIsPrimed = true
+	}
+
+	return c.backValue
+}
+
+func (c *cacheBidirectionalResult[T]) PopBack() {
+	c.r.(BidirectionalRange[T]).PopBack()
+	c.backIsPrimed = false
+}
+
+func (c *cacheBidirectionalResult[T]) Save() ForwardRange[T] {
+	return c.SaveB()
+}
+
+func (c *cacheBidirectionalResult[T]) SaveB() BidirectionalRange[T] {
+	return &cacheBidirectionalResult[T]{
+		cacheResult[T]{c.r.(BidirectionalRange[T]).SaveB(), c.value, c.isPrimed},
+		c.backValue,
+		c.backIsPrimed,
+	}
+}
+
 // Cache eagerly caches the first element in a range and caches values so
 // `Front()` is only called once per element for the original range.
 func Cache[T any](r InputRange[T]) InputRange[T] {
@@ -44,4 +76,12 @@ func Cache[T any](r InputRange[T]) InputRange[T] {
 // If the range is saved, `Front()` will be called multiple times.
 func CacheF[T any](r ForwardRange[T]) ForwardRange[T] {
 	return &cacheForwardResult[T]{cacheResult[T]{r, *new(T), false}}
+}
+
+// CacheB is `CacheF` for bidrectional ranges.
+//
+// Traversing in both directions could the same expression to be evaluated twice.
+// If the range is saved, `Front()` or `Back()` will be called multiple times.
+func CacheB[T any](r BidirectionalRange[T]) BidirectionalRange[T] {
+	return &cacheBidirectionalResult[T]{cacheResult[T]{r, *new(T), false}, *new(T), false}
 }
