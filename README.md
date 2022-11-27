@@ -145,6 +145,9 @@ with an `S` suffix.
     Similar to `Each` with an empty callback function, only `Front()` will never
     be called for the range.
   * `Filter` - Filter any `InputRange` with a callback.
+  * `FilterB` - Filter a `BidirectionalRange`, producing a range that can be
+    advanced in both directions. Less efficient for moving forwards, as it
+    requires priming the range in both directions.
   * `Group` - Yields pairs of `(value, size)` counting how many values are equal
     in each group according to `cb(a, b)`.
   * `GroupComparable` - `Group` where `a == b` for any comparable value.

@@ -18,19 +18,40 @@ func TestFilterIsLazy(t *testing.T) {
 	Filter[int](nil, nil)
 }
 
-func TestFilterF(t *testing.T) {
+func TestFilterS(t *testing.T) {
 	t.Parallel()
 
-	r := F(Only(1, 2, 3, 4))
-	fr := FilterF(r, func(element int) bool { return element%2 == 0 })
-	fr2 := fr.Save()
+	r := FilterS([]int{1, 2, 3, 4}, func(element int) bool { return element%2 == 0 })
+	assertEqual(t, SliceF(r), []int{2, 4})
+}
+
+func TestFilterB(t *testing.T) {
+	t.Parallel()
+
+	r := Only(1, 2, 3, 4)
+	fr := FilterB(r, func(element int) bool { return element%2 == 0 })
+	fr2 := fr.SaveB()
 
 	fr.PopFront()
 	fr.PopFront()
 
-	assertHasFrontF(t, fr2, 2)
+	assertEmptyB(t, fr)
+	assertHasFrontB(t, fr2, 2)
+	assertHasBack(t, fr2, 4)
+
+	fr2.PopBack()
+
+	assertHasFrontB(t, fr2, 2)
+	assertHasBack(t, fr2, 2)
 
 	fr2.PopFront()
 
-	assertHasFrontF(t, fr2, 4)
+	assertEmptyB(t, fr2)
+}
+
+func TestFilterSB(t *testing.T) {
+	t.Parallel()
+
+	r := FilterSB([]int{1, 2, 3, 4}, func(element int) bool { return element%2 == 0 })
+	assertEqual(t, SliceB(Retro(r)), []int{4, 2})
 }
