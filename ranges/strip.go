@@ -7,12 +7,12 @@ type stripLeftComparableResult[T comparable] struct {
 }
 
 func (slr *stripLeftComparableResult[T]) prime() {
-	for !slr.isPrimed && !slr.r.Empty() {
-		if slr.value == slr.r.Front() {
+	if !slr.isPrimed {
+		for !slr.r.Empty() && slr.value == slr.r.Front() {
 			slr.r.PopFront()
-		} else {
-			slr.isPrimed = true
 		}
+
+		slr.isPrimed = true
 	}
 }
 
@@ -99,12 +99,12 @@ type stripLeftResult[T any] struct {
 }
 
 func (slr *stripLeftResult[T]) prime() {
-	for !slr.isPrimed && !slr.r.Empty() {
-		if slr.cb(slr.r.Front()) {
+	if !slr.isPrimed {
+		for !slr.r.Empty() && slr.cb(slr.r.Front()) {
 			slr.r.PopFront()
-		} else {
-			slr.isPrimed = true
 		}
+
+		slr.isPrimed = true
 	}
 }
 
@@ -187,12 +187,12 @@ type stripRightComparableResult[T comparable] struct {
 }
 
 func (srr *stripRightComparableResult[T]) prime() {
-	for !srr.isPrimed && !srr.r.Empty() {
-		if srr.value == srr.r.Back() {
+	if !srr.isPrimed {
+		for !srr.r.Empty() && srr.value == srr.r.Back() {
 			srr.r.PopBack()
-		} else {
-			srr.isPrimed = true
 		}
+
+		srr.isPrimed = true
 	}
 }
 
@@ -239,7 +239,7 @@ func StripRightComparable[T comparable](r BidirectionalRange[T], value T) Bidire
 
 // StripRightComparableS is `StripRightComparable` accepting a slice.
 func StripRightComparableS[T comparable](r []T, value T) BidirectionalRange[T] {
-	return &stripRightComparableResult[T]{SliceRange(r), value, false}
+	return StripRightComparable(SliceRange(r), value)
 }
 
 type stripRightResult[T any] struct {
@@ -249,12 +249,12 @@ type stripRightResult[T any] struct {
 }
 
 func (srr *stripRightResult[T]) prime() {
-	for !srr.isPrimed && !srr.r.Empty() {
-		if srr.cb(srr.r.Back()) {
+	if !srr.isPrimed {
+		for !srr.r.Empty() && srr.cb(srr.r.Back()) {
 			srr.r.PopBack()
-		} else {
-			srr.isPrimed = true
 		}
+
+		srr.isPrimed = true
 	}
 }
 
@@ -301,5 +301,137 @@ func StripRight[T any](r BidirectionalRange[T], cb func(a T) bool) Bidirectional
 
 // StripRightS is `StripRight` accepting a slice.
 func StripRightS[T any](r []T, cb func(a T) bool) BidirectionalRange[T] {
-	return &stripRightResult[T]{SliceRange(r), cb, false}
+	return StripRight(SliceRange(r), cb)
+}
+
+type stripComparableResult[T comparable] struct {
+	r        BidirectionalRange[T]
+	value    T
+	isPrimed bool
+}
+
+func (sr *stripComparableResult[T]) prime() {
+	if !sr.isPrimed {
+		for !sr.r.Empty() && sr.value == sr.r.Front() {
+			sr.r.PopFront()
+		}
+
+		for !sr.r.Empty() && sr.value == sr.r.Back() {
+			sr.r.PopBack()
+		}
+
+		sr.isPrimed = true
+	}
+}
+
+func (sr *stripComparableResult[T]) Empty() bool {
+	sr.prime()
+
+	return sr.r.Empty()
+}
+
+func (sr *stripComparableResult[T]) Front() T {
+	sr.prime()
+
+	return sr.r.Front()
+}
+
+func (sr *stripComparableResult[T]) PopFront() {
+	sr.prime()
+	sr.r.PopFront()
+}
+
+func (sr *stripComparableResult[T]) Back() T {
+	sr.prime()
+
+	return sr.r.Back()
+}
+
+func (sr *stripComparableResult[T]) PopBack() {
+	sr.prime()
+	sr.r.PopBack()
+}
+
+func (sr *stripComparableResult[T]) Save() ForwardRange[T] {
+	return sr.SaveB()
+}
+
+func (sr *stripComparableResult[T]) SaveB() BidirectionalRange[T] {
+	return &stripComparableResult[T]{sr.r.SaveB(), sr.value, sr.isPrimed}
+}
+
+// StripComparable removes elements equal to `value` from the front and back of a range.
+func StripComparable[T comparable](r BidirectionalRange[T], value T) BidirectionalRange[T] {
+	return &stripComparableResult[T]{r, value, false}
+}
+
+// StripComparableS is `StripComparable` accepting a slice.
+func StripComparableS[T comparable](r []T, value T) BidirectionalRange[T] {
+	return StripComparable(SliceRange(r), value)
+}
+
+type stripResult[T any] struct {
+	r        BidirectionalRange[T]
+	cb       func(a T) bool
+	isPrimed bool
+}
+
+func (sr *stripResult[T]) prime() {
+	if !sr.isPrimed {
+		for !sr.r.Empty() && sr.cb(sr.r.Front()) {
+			sr.r.PopFront()
+		}
+
+		for !sr.r.Empty() && sr.cb(sr.r.Back()) {
+			sr.r.PopBack()
+		}
+
+		sr.isPrimed = true
+	}
+}
+
+func (sr *stripResult[T]) Empty() bool {
+	sr.prime()
+
+	return sr.r.Empty()
+}
+
+func (sr *stripResult[T]) Front() T {
+	sr.prime()
+
+	return sr.r.Front()
+}
+
+func (sr *stripResult[T]) PopFront() {
+	sr.prime()
+	sr.r.PopFront()
+}
+
+func (sr *stripResult[T]) Back() T {
+	sr.prime()
+
+	return sr.r.Back()
+}
+
+func (sr *stripResult[T]) PopBack() {
+	sr.prime()
+	sr.r.PopBack()
+}
+
+func (sr *stripResult[T]) Save() ForwardRange[T] {
+	return sr.SaveB()
+}
+
+func (sr *stripResult[T]) SaveB() BidirectionalRange[T] {
+	return &stripResult[T]{sr.r.SaveB(), sr.cb, sr.isPrimed}
+}
+
+// Strip removes elements where `cb(a) == true` from the front and back of a range.
+func Strip[T any](r BidirectionalRange[T], cb func(a T) bool) BidirectionalRange[T] {
+	return &stripResult[T]{r, cb, false}
+}
+
+// StripS is `Strip` accepting a slice.
+func StripS[T any](r []T, cb func(a T) bool) BidirectionalRange[T] {
+	return Strip(SliceRange(r), cb)
 }

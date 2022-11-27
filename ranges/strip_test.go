@@ -139,3 +139,43 @@ func TestStripRightS(t *testing.T) {
 	assertHasSaveableBack(t, r, 3)
 	assertHasSaveableFrontB(t, r, 0)
 }
+
+func TestStripComparable(t *testing.T) {
+	t.Parallel()
+
+	r := StripComparable(Only(0, 0, 0, 1, 0, 2, 0, 0), 0)
+
+	assertHasSaveableBack(t, r, 2)
+	assertHasSaveableFrontB(t, r, 1)
+	assertHasFrontB(t, r, 0)
+}
+
+func TestStripComparableS(t *testing.T) {
+	t.Parallel()
+
+	r := StripComparableS([]int{0, 0, 0, 1, 0, 2, 0, 0}, 0)
+
+	assertHasSaveableBack(t, r, 2)
+	assertHasSaveableFrontB(t, r, 1)
+	assertHasFrontB(t, r, 0)
+}
+
+func TestStrip(t *testing.T) {
+	t.Parallel()
+
+	r := Strip(Only(0, 0, 0, 1, 0, 2, 0, 0), func(a int) bool { return a == 0 })
+
+	assertHasSaveableBack(t, r, 2)
+	assertHasSaveableFrontB(t, r, 1)
+	assertHasFrontB(t, r, 0)
+}
+
+func TestStripS(t *testing.T) {
+	t.Parallel()
+
+	r := StripS([]int{0, 0, 0, 1, 0, 2, 0, 0}, func(a int) bool { return a == 0 })
+
+	assertHasSaveableBack(t, r, 2)
+	assertHasSaveableFrontB(t, r, 1)
+	assertHasFrontB(t, r, 0)
+}

@@ -185,6 +185,10 @@ with an `S` suffix.
     range.
   * `StripRightComparable` - Removes elements where `a == value` from the back
     of a range.
+  * `Strip` - Removes elements where `cb(a) == true` from the front and back of
+    a range.
+  * `StripComparable` - Removes elements where `a == value` from the front and
+    back of a range.
 * `searching`
   * `All` - Checks if all elements in an `InputRange` satisfy a callback.
   * `Any` - Checks if any elements in an `InputRange` satisfy a callback.
