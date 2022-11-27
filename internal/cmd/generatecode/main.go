@@ -71,8 +71,8 @@ func printTuple(file *os.File, size int) {
 	fmt.Fprintln(file, "}")
 }
 
-func printZipStruct(file *os.File, size int) {
-	fmt.Fprintf(file, "type zip%sResult[", tupleNames[size])
+func printZipStruct(file *os.File, size int, suffix string, rangeType string) {
+	fmt.Fprintf(file, "type zip%s%sResult[", tupleNames[size], suffix)
 
 	for i := 1; i < size; i++ {
 		fmt.Fprintf(file, "%s, ", tupleTypeNames[i])
@@ -81,14 +81,14 @@ func printZipStruct(file *os.File, size int) {
 	fmt.Fprintf(file, "%s any] struct {\n", tupleTypeNames[size])
 
 	for i := 1; i <= size; i++ {
-		fmt.Fprintf(file, "\t%s InputRange[%s]\n", tupleArgNames[i], tupleTypeNames[i])
+		fmt.Fprintf(file, "\t%s %s[%s]\n", tupleArgNames[i], rangeType, tupleTypeNames[i])
 	}
 
 	fmt.Fprintln(file, "}")
 }
 
-func printZipMethodHead(file *os.File, size int) {
-	fmt.Fprintf(file, "func (z *zip%sResult[", tupleNames[size])
+func printZipMethodHead(file *os.File, size int, suffix string) {
+	fmt.Fprintf(file, "func (z *zip%s%sResult[", tupleNames[size], suffix)
 
 	for i := 1; i < size; i++ {
 		fmt.Fprintf(file, "%s, ", tupleTypeNames[i])
@@ -97,8 +97,8 @@ func printZipMethodHead(file *os.File, size int) {
 	fmt.Fprintf(file, "%s]) ", tupleTypeNames[size])
 }
 
-func printZipEmptyMethod(file *os.File, size int) {
-	printZipMethodHead(file, size)
+func printZipEmptyMethod(file *os.File, size int, suffix string) {
+	printZipMethodHead(file, size, suffix)
 
 	fmt.Fprintln(file, "Empty() bool {")
 	fmt.Fprintln(file, "\treturn z.a.Empty() ||")
@@ -116,8 +116,8 @@ func printZipEmptyMethod(file *os.File, size int) {
 	fmt.Fprintln(file, "}")
 }
 
-func printZipFrontMethod(file *os.File, size int) {
-	printZipMethodHead(file, size)
+func printZipFrontMethod(file *os.File, size int, suffix string) {
+	printZipMethodHead(file, size, suffix)
 
 	fmt.Fprintf(file, "Front() %s[", tupleNames[size])
 
@@ -142,8 +142,8 @@ func printZipFrontMethod(file *os.File, size int) {
 	fmt.Fprintln(file, "}")
 }
 
-func printZipPopFrontMethod(file *os.File, size int) {
-	printZipMethodHead(file, size)
+func printZipPopFrontMethod(file *os.File, size int, suffix string) {
+	printZipMethodHead(file, size, suffix)
 
 	fmt.Fprintln(file, "PopFront() {")
 
@@ -154,10 +154,41 @@ func printZipPopFrontMethod(file *os.File, size int) {
 	fmt.Fprintln(file, "}")
 }
 
-func printZipFunc(file *os.File, size int) {
-	fmt.Fprintf(file, "// Zip%d produces items from %d ranges in parallel.\n", size, size)
+func printZipSaveMethod(file *os.File, size int, suffix string) {
+	printZipMethodHead(file, size, suffix)
+
+	fmt.Fprintf(file, "Save(")
+	printZipReturnType(file, size, suffix, "ForwardRange")
+	fmt.Fprintf(file, "\treturn &zip%s%sResult[", tupleNames[size], suffix)
+
+	for i := 1; i < size; i++ {
+		fmt.Fprintf(file, "%s, ", tupleTypeNames[i])
+	}
+
+	fmt.Fprintf(file, "%s]{\n", tupleTypeNames[size])
+
+	for i := 1; i <= size; i++ {
+		fmt.Fprintf(file, "\t\tz.%s.Save(),\n", tupleArgNames[i])
+	}
+
+	fmt.Fprintln(file, "\t}")
+	fmt.Fprintln(file, "}")
+}
+
+func printZipReturnType(file *os.File, size int, suffix string, rangeType string) {
+	fmt.Fprintf(file, ") %s[%s[", rangeType, tupleNames[size])
+
+	for i := 1; i < size; i++ {
+		fmt.Fprintf(file, "%s, ", tupleTypeNames[i])
+	}
+
+	fmt.Fprintf(file, "%s]] {\n", tupleTypeNames[size])
+}
+
+func printZipFunc(file *os.File, size int, suffix string, rangeType string) {
+	fmt.Fprintf(file, "// Zip%d%s produces items from %d ranges in parallel.\n", size, suffix, size)
 	fmt.Fprintln(file, "// The range will be empty when any of the ranges are empty.")
-	fmt.Fprintf(file, "func Zip%d[", size)
+	fmt.Fprintf(file, "func Zip%d%s[", size, suffix)
 
 	for i := 1; i < size; i++ {
 		fmt.Fprintf(file, "%s, ", tupleTypeNames[i])
@@ -166,17 +197,11 @@ func printZipFunc(file *os.File, size int) {
 	fmt.Fprintf(file, "%s any](\n", tupleTypeNames[size])
 
 	for i := 1; i <= size; i++ {
-		fmt.Fprintf(file, "\t%s InputRange[%s],\n", tupleArgNames[i], tupleTypeNames[i])
+		fmt.Fprintf(file, "\t%s %s[%s],\n", tupleArgNames[i], rangeType, tupleTypeNames[i])
 	}
 
-	fmt.Fprintf(file, ") InputRange[%s[", tupleNames[size])
-
-	for i := 1; i < size; i++ {
-		fmt.Fprintf(file, "%s, ", tupleTypeNames[i])
-	}
-
-	fmt.Fprintf(file, "%s]] {\n", tupleTypeNames[size])
-	fmt.Fprintf(file, "\treturn &zip%sResult[", tupleNames[size])
+	printZipReturnType(file, size, suffix, rangeType)
+	fmt.Fprintf(file, "\treturn &zip%s%sResult[", tupleNames[size], suffix)
 
 	for i := 1; i < size; i++ {
 		fmt.Fprintf(file, "%s, ", tupleTypeNames[i])
@@ -201,20 +226,33 @@ func writeTupleFile(file *os.File) {
 	}
 }
 
+type zipType struct {
+	suffix    string
+	rangeType string
+}
+
 func writeZipFile(file *os.File) {
 	writeGenerateFileHeader(file)
 
 	for size := 2; size <= maxArgs; size++ {
-		fmt.Fprintln(file)
-		printZipStruct(file, size)
-		fmt.Fprintln(file)
-		printZipEmptyMethod(file, size)
-		fmt.Fprintln(file)
-		printZipFrontMethod(file, size)
-		fmt.Fprintln(file)
-		printZipPopFrontMethod(file, size)
-		fmt.Fprintln(file)
-		printZipFunc(file, size)
+		for _, item := range []zipType{{"", "InputRange"}, {"F", "ForwardRange"}} {
+			fmt.Fprintln(file)
+			printZipStruct(file, size, item.suffix, item.rangeType)
+			fmt.Fprintln(file)
+			printZipEmptyMethod(file, size, item.suffix)
+			fmt.Fprintln(file)
+			printZipFrontMethod(file, size, item.suffix)
+			fmt.Fprintln(file)
+			printZipPopFrontMethod(file, size, item.suffix)
+
+			if item.suffix == "F" {
+				fmt.Fprintln(file)
+				printZipSaveMethod(file, size, item.suffix)
+			}
+
+			fmt.Fprintln(file)
+			printZipFunc(file, size, item.suffix, item.rangeType)
+		}
 	}
 }
 
@@ -255,8 +293,8 @@ func main() {
 
 	var wg sync.WaitGroup
 
-	go createFile(&wg, "ranges/tuple.go", writeTupleFile)
-	go createFile(&wg, "ranges/zip.go", writeZipFile)
+	createFile(&wg, "ranges/tuple.go", writeTupleFile)
+	createFile(&wg, "ranges/zip.go", writeZipFile)
 
 	wg.Wait()
 }
