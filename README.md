@@ -181,6 +181,10 @@ with an `S` suffix.
     range.
   * `StripLeftComparable` - `StripLeft` where `a == value`, given a provided
     value.
+  * `StripRight` - Removes elements where `cb(a) == true` from the back of a
+    range.
+  * `StripRightComparable` - Removes elements where `a == value` from the back
+    of a range.
 * `searching`
   * `All` - Checks if all elements in an `InputRange` satisfy a callback.
   * `Any` - Checks if any elements in an `InputRange` satisfy a callback.
