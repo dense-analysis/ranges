@@ -114,3 +114,13 @@ func assertHasSaveableFrontB[T any](t *testing.T, r BidirectionalRange[T], value
 	t.Helper()
 	assertHasSaveableFront(t, r.(ForwardRange[T]), value)
 }
+
+func assertHasSaveableBack[T any](t *testing.T, r BidirectionalRange[T], value T) {
+	t.Helper()
+	assertHasBack(t, r, value)
+
+	rSave := r.SaveB()
+	r.PopFront()
+
+	assertHasBack(t, rSave, value)
+}
