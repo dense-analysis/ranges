@@ -1,3 +1,3 @@
-module github.com/w0rp/ranges
+module github.com/dense-analysis/ranges
 
 go 1.18
