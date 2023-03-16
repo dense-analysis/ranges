@@ -1,5 +1,7 @@
 # ranges
 
+[![Go](https://img.shields.io/badge/pkg-%2311AB00.svg?style=for-the-badge&logo=go&labelColor=555555&logoColor=white)](https://pkg.go.dev/github.com/dense-analysis/ranges) [![CI](https://img.shields.io/github/actions/workflow/status/dense-analysis/ranges/go.yml?branch=master&style=for-the-badge&label=ci&logo=github)](https://github.com/dense-analysis/ranges/actions/workflows/go.yml?query=event%3Apush+branch%3Amaster)
+
 `ranges` implements the nearest implementation of D range-based algorithms in
 Go, for fun and to experiment with what is possible in Go 1.18.
 
