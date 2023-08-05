@@ -8,6 +8,11 @@ type Pair[A, B any] struct {
 	B B
 }
 
+// Get returns items as a Go tuple
+func (p Pair[A, B]) Get() (A, B) {
+	return p.A, p.B
+}
+
 // MakePair creates a Pair
 func MakePair[A, B any](a A, b B) Pair[A, B] {
 	return Pair[A, B]{a, b}
@@ -18,6 +23,11 @@ type Triplet[A, B, C any] struct {
 	A A
 	B B
 	C C
+}
+
+// Get returns items as a Go tuple
+func (t Triplet[A, B, C]) Get() (A, B, C) {
+	return t.A, t.B, t.C
 }
 
 // MakeTriplet creates a Triplet
@@ -31,6 +41,11 @@ type Quartet[A, B, C, D any] struct {
 	B B
 	C C
 	D D
+}
+
+// Get returns items as a Go tuple
+func (q Quartet[A, B, C, D]) Get() (A, B, C, D) {
+	return q.A, q.B, q.C, q.D
 }
 
 // MakeQuartet creates a Quartet
@@ -47,6 +62,11 @@ type Quintet[A, B, C, D, E any] struct {
 	E E
 }
 
+// Get returns items as a Go tuple
+func (q Quintet[A, B, C, D, E]) Get() (A, B, C, D, E) {
+	return q.A, q.B, q.C, q.D, q.E
+}
+
 // MakeQuintet creates a Quintet
 func MakeQuintet[A, B, C, D, E any](a A, b B, c C, d D, e E) Quintet[A, B, C, D, E] {
 	return Quintet[A, B, C, D, E]{a, b, c, d, e}
@@ -60,6 +80,11 @@ type Sextet[A, B, C, D, E, F any] struct {
 	D D
 	E E
 	F F
+}
+
+// Get returns items as a Go tuple
+func (s Sextet[A, B, C, D, E, F]) Get() (A, B, C, D, E, F) {
+	return s.A, s.B, s.C, s.D, s.E, s.F
 }
 
 // MakeSextet creates a Sextet
@@ -78,6 +103,11 @@ type Septet[A, B, C, D, E, F, G any] struct {
 	G G
 }
 
+// Get returns items as a Go tuple
+func (s Septet[A, B, C, D, E, F, G]) Get() (A, B, C, D, E, F, G) {
+	return s.A, s.B, s.C, s.D, s.E, s.F, s.G
+}
+
 // MakeSeptet creates a Septet
 func MakeSeptet[A, B, C, D, E, F, G any](a A, b B, c C, d D, e E, f F, g G) Septet[A, B, C, D, E, F, G] {
 	return Septet[A, B, C, D, E, F, G]{a, b, c, d, e, f, g}
@@ -93,6 +123,11 @@ type Octet[A, B, C, D, E, F, G, H any] struct {
 	F F
 	G G
 	H H
+}
+
+// Get returns items as a Go tuple
+func (o Octet[A, B, C, D, E, F, G, H]) Get() (A, B, C, D, E, F, G, H) {
+	return o.A, o.B, o.C, o.D, o.E, o.F, o.G, o.H
 }
 
 // MakeOctet creates a Octet
@@ -113,6 +148,11 @@ type Ennead[A, B, C, D, E, F, G, H, I any] struct {
 	I I
 }
 
+// Get returns items as a Go tuple
+func (e Ennead[A, B, C, D, E, F, G, H, I]) Get() (A, B, C, D, E, F, G, H, I) {
+	return e.A, e.B, e.C, e.D, e.E, e.F, e.G, e.H, e.I
+}
+
 // MakeEnnead creates a Ennead
 func MakeEnnead[A, B, C, D, E, F, G, H, I any](a A, b B, c C, d D, e E, f F, g G, h H, i I) Ennead[A, B, C, D, E, F, G, H, I] {
 	return Ennead[A, B, C, D, E, F, G, H, I]{a, b, c, d, e, f, g, h, i}
@@ -130,6 +170,11 @@ type Decade[A, B, C, D, E, F, G, H, I, J any] struct {
 	H H
 	I I
 	J J
+}
+
+// Get returns items as a Go tuple
+func (d Decade[A, B, C, D, E, F, G, H, I, J]) Get() (A, B, C, D, E, F, G, H, I, J) {
+	return d.A, d.B, d.C, d.D, d.E, d.F, d.G, d.H, d.I, d.J
 }
 
 // MakeDecade creates a Decade
