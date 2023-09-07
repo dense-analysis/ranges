@@ -293,9 +293,9 @@ Then supporting those range types would only require redundantly defining `Save`
 as up to 4 different methods with slightly different names to get the more
 specific types. This would be mildly annoying, but would work.
 
-### Weak inference of ForwardRange[T] as InputRange[T]
+### Weak inference of ForwardRange[T] as InputRange[T] before Go 1.21
 
-You cannot write the following in Go:
+You cannot write the following in Go versions below 1.21:
 
 ```go
 r := Only(1, 2, 3, 4)
@@ -310,6 +310,9 @@ r := Only(1, 2, 3, 4)
 sliceCopy := Slice(Filter[int](r, func(element int) bool { return element % 2 == 0 }))
 \\                       ^ Now Go knows T and we can pass ForwardRange[T]
 ```
+
+Go 1.2.1 fixed this issue by adding better type inference, so the former case
+should just work in Go 1.21.
 
 For this reason variations of the functions exist to require less typing.
 
