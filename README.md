@@ -367,55 +367,11 @@ for `InputRange[T]`.
 
 ### No covariant return types in Go
 
-For the definition of a `BidirectionalRange` and `RandomAccessRange`, we would
-require the following.
-
-```go
-type BidirectionalRange[T any] interface {
-    ForwardRange[T]
-    Save() BidirectionalRange[T]
-    Back() T
-    PopBack()
-}
-
-type RandomAccessRange[T any] interface {
-    BidirectionalRange[T]
-    Save() RandomAccessRange[T]
-    GetIndex(index int) T
-}
-```
-
-This is not possible in Go because `Save()` cannot be implemented with multiple
-return types, and the interfaces cannot be re-implemented with `InputRange[T]`
-as a basis because that means Go will not consider either type to be a subtype
-of `ForwardRange[T]`.
-
-This library could be extended so we represent types like so:
-
-```
-type BidirectionalRange[T any] interface {
-	ForwardRange[T]
-	SaveB() BidirectionalRange[T]
-	Back() T
-	PopBack()
-}
-
-type RandomAccessRange[T any] interface {
-	BidirectionalRange[T]
-	Get(index int) T
-	SaveR() RandomAccessRange[T]
-}
-
-type RandomAccessRangeWithLength[T any] interface {
-	RandomAccessRange[T]
-	HasLength
-	SaveRL() RandomAccessRangeWithLength[T]
-}
-```
-
-Then supporting those range types would only require redundantly defining `Save`
-as up to 4 different methods with slightly different names to get the more
-specific types. This would be mildly annoying, but would work.
+We need `SaveB` and `SaveR` methods because there are no covariant return types
+in Go. This means a user can be led to choosing a suboptimal save function.
+There's no way around this in Go. In D, saving a range automatically carries
+across the more specific details of the range type, such as `RandomAccessRange`
+`save` method returning a `RandomAccessRange`.
 
 ### Weak inference of ForwardRange[T] as InputRange[T] before Go 1.21
 
