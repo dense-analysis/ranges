@@ -46,7 +46,7 @@ func TestDropCallPopFrontFirst(t *testing.T) {
 func TestDropF(t *testing.T) {
 	t.Parallel()
 
-	dropRange := DropF(F(Only(1, 2, 3, 4, 5)), 3)
+	dropRange := DropF(F(B(Only(1, 2, 3, 4, 5))), 3)
 
 	sliceCopy := SliceF(dropRange.Save())
 	sliceCopy2 := SliceF(dropRange.Save())
@@ -58,7 +58,7 @@ func TestDropF(t *testing.T) {
 func TestDropFCallFrontFirst(t *testing.T) {
 	t.Parallel()
 
-	dropRange := DropF(F(Only(1, 2, 3, 4, 5)), 3)
+	dropRange := DropF(F(B(Only(1, 2, 3, 4, 5))), 3)
 
 	assertHasFrontF(t, dropRange, 4)
 }
@@ -66,7 +66,7 @@ func TestDropFCallFrontFirst(t *testing.T) {
 func TestDropFCallPopFrontFirst(t *testing.T) {
 	t.Parallel()
 
-	dropRange := DropF(F(Only(1, 2, 3, 4, 5)), 3)
+	dropRange := DropF(F(B(Only(1, 2, 3, 4, 5))), 3)
 
 	dropRange.PopFront()
 	assertHasFrontF(t, dropRange, 5)
@@ -75,7 +75,7 @@ func TestDropFCallPopFrontFirst(t *testing.T) {
 func TestDropFZero(t *testing.T) {
 	t.Parallel()
 
-	sliceCopy := Slice[int](DropF(F(Only(1, 2, 3)), 0))
+	sliceCopy := Slice[int](DropF(F(B(Only(1, 2, 3))), 0))
 
 	assertEqual(t, sliceCopy, []int{1, 2, 3})
 }
@@ -83,7 +83,7 @@ func TestDropFZero(t *testing.T) {
 func TestDropFNegative(t *testing.T) {
 	t.Parallel()
 
-	sliceCopy := Slice[int](DropF(F(Only(1, 2, 3)), -10))
+	sliceCopy := Slice[int](DropF(F(B(Only(1, 2, 3))), -10))
 
 	assertEqual(t, sliceCopy, []int{1, 2, 3})
 }
@@ -91,7 +91,7 @@ func TestDropFNegative(t *testing.T) {
 func TestDropB(t *testing.T) {
 	t.Parallel()
 
-	dropRange := DropB(Only(1, 2, 3, 4, 5), 3)
+	dropRange := DropB(B(Only(1, 2, 3, 4, 5)), 3)
 
 	sliceCopy := SliceB(dropRange.SaveB())
 	sliceCopy2 := SliceB(dropRange.SaveB())
@@ -104,4 +104,35 @@ func TestDropB(t *testing.T) {
 	assertHasBack(t, dropRange, 4)
 	dropRange.PopBack()
 	assertEmptyB(t, dropRange)
+}
+
+func TestDropR(t *testing.T) {
+	t.Parallel()
+
+	r := DropR(Only(1, 2, 3, 4, 5), 3)
+	r2 := r.SaveR()
+	r.PopFront()
+
+	assertEqual(t, r2.Get(0), 4)
+	assertEqual(t, SliceR(r), []int{5})
+	assertEqual(t, SliceR(r2), []int{4, 5})
+}
+
+// Ensure we prime the drop range if we .Get() before other operations.
+func TestDropRGetPrimed(t *testing.T) {
+	t.Parallel()
+
+	r := DropR(Only(1, 2, 3, 4, 5), 3)
+
+	assertEqual(t, r.Get(0), 4)
+	assertEqual(t, r.Get(1), 5)
+}
+
+// Ensure we prime the drop range if we check length before other operations.
+func TestDropRLen(t *testing.T) {
+	t.Parallel()
+
+	r := DropR(Only(1, 2, 3, 4, 5), 3)
+
+	assertEqual(t, r.Len(), 2)
 }

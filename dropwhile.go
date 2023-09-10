@@ -1,5 +1,6 @@
 package ranges
 
+// dropWhileResult implements DropWhile
 type dropWhileResult[T any] struct {
 	r  InputRange[T]
 	cb func(element T) bool
@@ -38,6 +39,7 @@ func (dwr *dropWhileResult[T]) PopFront() {
 	dwr.r.PopFront()
 }
 
+// dropWhileForwardResult implements DropWhileF
 type dropWhileForwardResult[T any] struct {
 	dropWhileResult[T]
 }

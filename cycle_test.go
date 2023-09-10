@@ -5,7 +5,7 @@ import "testing"
 func TestCycle(t *testing.T) {
 	t.Parallel()
 
-	r := Cycle(F(Only(1, 2, 3)))
+	r := Cycle(F(B(Only(1, 2, 3))))
 
 	r1 := r.Front()
 	r.PopFront()

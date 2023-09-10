@@ -76,7 +76,7 @@ func StrideF[T any](r ForwardRange[T], step int) ForwardRange[T] {
 
 // StrideS is `StrideF` accepting a slice.
 //
-// This result is optimised for slices.
+// This result is optimized for slices.
 func StrideS[T any](r []T, step int) ForwardRange[T] {
 	if step < 1 {
 		panic("step < 1 for Stride")

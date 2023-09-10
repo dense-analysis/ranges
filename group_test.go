@@ -7,7 +7,7 @@ func TestGroup(t *testing.T) {
 
 	result := Slice(
 		Group(
-			I(F(Only("a", "b", "b", "b", "c", "c", "d"))),
+			I(F(B(Only("a", "b", "b", "b", "c", "c", "d")))),
 			func(a, b string) bool { return a == b },
 		),
 	)
@@ -42,7 +42,7 @@ func TestGroupComparable(t *testing.T) {
 	t.Parallel()
 
 	result := Slice(
-		GroupComparable(I(F(Only("a", "b", "b", "b", "c", "c", "d")))),
+		GroupComparable(I(F(B(Only("a", "b", "b", "b", "c", "c", "d"))))),
 	)
 
 	assertEqual(t, result, []Pair[string, int]{

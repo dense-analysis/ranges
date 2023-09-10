@@ -164,12 +164,12 @@ func Splitter[T any](r ForwardRange[T], cb func(a, b T) bool, separator ForwardR
 
 // SplitterS is `Splitter` accepting a slice.
 func SplitterS[T any](r []T, cb func(a, b T) bool, separator ForwardRange[T]) ForwardRange[ForwardRange[T]] {
-	return Splitter(F(SliceRange(r)), cb, separator)
+	return Splitter(F(B(SliceRange(r))), cb, separator)
 }
 
 // SplitterSS is `SplitterS` accepting a slice for both ranges.
 func SplitterSS[T any](r []T, cb func(a, b T) bool, separator []T) ForwardRange[ForwardRange[T]] {
-	return SplitterS(r, cb, F(SliceRange(separator)))
+	return SplitterS(r, cb, F(B(SliceRange(separator))))
 }
 
 // SplitterComparable splits ranges using a ForwardRange as a separator where
@@ -180,19 +180,19 @@ func SplitterComparable[T comparable](r ForwardRange[T], separator ForwardRange[
 
 // SplitterComparableS is `SplitterComparable` accepting a slice.
 func SplitterComparableS[T comparable](r []T, separator ForwardRange[T]) ForwardRange[ForwardRange[T]] {
-	return SplitterComparable(F(SliceRange(r)), separator)
+	return SplitterComparable(F(B(SliceRange(r))), separator)
 }
 
 // SplitterComparableSS is `SplitterComparable` accepting a slice for both ranges
 func SplitterComparableSS[T comparable](r []T, separator []T) ForwardRange[ForwardRange[T]] {
-	return SplitterComparableS(r, F(SliceRange(separator)))
+	return SplitterComparableS(r, F(B(SliceRange(separator))))
 }
 
 // SplitString splits a string by a `separator` into a range of strings.
 func SplitString(r string, separator string) ForwardRange[string] {
 	return CacheF(
 		MapF(
-			SplitterComparable(F(Bytes(r)), F(Bytes(separator))),
+			SplitterComparable(F(B(Bytes(r))), F(B(Bytes(separator)))),
 			Pipe2(SliceF[byte], func(arr []byte) string { return string(arr) }),
 		),
 	)

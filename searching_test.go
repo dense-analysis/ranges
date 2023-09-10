@@ -81,23 +81,23 @@ func TestStartsWith(t *testing.T) {
 func TestSkipOver(t *testing.T) {
 	t.Parallel()
 
-	empty := F(Runes(""))
+	empty := F(B(Runes("")))
 
-	if !SkipOver(&empty, I(F(Runes("xyz"))), Eq[rune]) {
+	if !SkipOver(&empty, I(F(B(Runes("xyz")))), Eq[rune]) {
 		t.Error("SkipOver(\"\", \"xyz\") != true")
 	}
 
-	if !SkipOver(nil, I(F(Runes("xyz"))), Eq[rune]) {
+	if !SkipOver(nil, I(F(B(Runes("xyz")))), Eq[rune]) {
 		t.Error("SkipOver(nil, \"xyz\") != true")
 	}
 
-	r1 := F(Runes("Hello world"))
+	r1 := F(B(Runes("Hello world")))
 
-	if SkipOver(&r1, I(F(Runes("Ha"))), Eq[rune]) {
+	if SkipOver(&r1, I(F(B(Runes("Ha")))), Eq[rune]) {
 		t.Fatal("SkipOver(\"Hello world\", \"Ha\") != false")
 	}
 
-	if !SkipOver(&r1, I(F(Runes("Hell"))), Eq[rune]) {
+	if !SkipOver(&r1, I(F(B(Runes("Hell")))), Eq[rune]) {
 		t.Fatal("SkipOver(\"Hello world\", \"Hell\") != true")
 	}
 
@@ -107,9 +107,9 @@ func TestSkipOver(t *testing.T) {
 func TestLength(t *testing.T) {
 	t.Parallel()
 
-	assertEqual(t, Length(I(F(Only[int]()))), 0)
-	assertEqual(t, Length(I(F(Only(1)))), 1)
-	assertEqual(t, Length(I(F(Only(4, 5, 6)))), 3)
+	assertEqual(t, Length(I(F(B(Only[int]())))), 0)
+	assertEqual(t, Length(I(F(B(Only(1))))), 1)
+	assertEqual(t, Length(I(F(B(Only(4, 5, 6))))), 3)
 }
 
 func TestCount(t *testing.T) {
@@ -136,7 +136,7 @@ func TestCount(t *testing.T) {
 func TestCountUntil(t *testing.T) {
 	t.Parallel()
 
-	r := F(Only(4, 2, 3, 4, 5))
+	r := F(B(Only(4, 2, 3, 4, 5)))
 	res1 := CountUntil[int](r, func(x int) bool { return x%2 == 1 })
 
 	if res1 != 2 {

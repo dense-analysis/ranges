@@ -10,6 +10,7 @@ import (
 const maxArgs = 10
 
 var tupleNames map[int]string
+var tupleVariableNames map[int]string
 var tupleTypeNames map[int]string
 var tupleArgNames map[int]string
 
@@ -19,7 +20,7 @@ func writeGenerateFileHeader(file *os.File) {
 	fmt.Fprintln(file, "// Generated with: go run internal/cmd/generatecode/main.go")
 }
 
-func printTuple(file *os.File, size int) {
+func printTupleStructDefinition(file *os.File, size int) {
 	fmt.Fprintf(file, "// %s holds %d items\n", tupleNames[size], size)
 	fmt.Fprintf(file, "type %s[", tupleNames[size])
 
@@ -34,8 +35,35 @@ func printTuple(file *os.File, size int) {
 	}
 
 	fmt.Fprintln(file, "}")
-	fmt.Fprintln(file)
+}
 
+func printTupleGetMethod(file *os.File, size int) {
+	fmt.Fprintln(file, "// Get returns items as a Go tuple")
+	fmt.Fprintf(file, "func (%s %s[", tupleVariableNames[size], tupleNames[size])
+
+	for i := 1; i < size; i++ {
+		fmt.Fprintf(file, "%s, ", tupleTypeNames[i])
+	}
+
+	fmt.Fprintf(file, "%s]) Get() (", tupleTypeNames[size])
+
+	for i := 1; i < size; i++ {
+		fmt.Fprintf(file, "%s, ", tupleTypeNames[i])
+	}
+
+	fmt.Fprintf(file, "%s) {\n", tupleTypeNames[size])
+
+	fmt.Fprint(file, "\treturn ")
+
+	for i := 1; i < size; i++ {
+		fmt.Fprintf(file, "%s.%s, ", tupleVariableNames[size], tupleTypeNames[i])
+	}
+
+	fmt.Fprintf(file, "%s.%s\n", tupleVariableNames[size], tupleTypeNames[size])
+	fmt.Fprintln(file, "}")
+}
+
+func printTupleMakeFunction(file *os.File, size int) {
 	fmt.Fprintf(file, "// Make%s creates a %s\n", tupleNames[size], tupleNames[size])
 	fmt.Fprintf(file, "func Make%s[", tupleNames[size])
 
@@ -69,6 +97,16 @@ func printTuple(file *os.File, size int) {
 
 	fmt.Fprintf(file, "%s}\n", tupleArgNames[size])
 	fmt.Fprintln(file, "}")
+}
+
+func printTuple(file *os.File, size int) {
+	printTupleStructDefinition(file, size)
+	fmt.Fprintln(file)
+
+	printTupleGetMethod(file, size)
+	fmt.Fprintln(file)
+
+	printTupleMakeFunction(file, size)
 }
 
 func printZipStruct(file *os.File, size int, suffix string, rangeType string) {
@@ -288,13 +326,25 @@ func main() {
 		9:  "Ennead",
 		10: "Decade",
 	}
+	tupleVariableNames = map[int]string{
+		1:  "u",
+		2:  "p",
+		3:  "t",
+		4:  "q",
+		5:  "q",
+		6:  "s",
+		7:  "s",
+		8:  "o",
+		9:  "e",
+		10: "d",
+	}
 	tupleTypeNames = map[int]string{1: "A", 2: "B", 3: "C", 4: "D", 5: "E", 6: "F", 7: "G", 8: "H", 9: "I", 10: "J"}
 	tupleArgNames = map[int]string{1: "a", 2: "b", 3: "c", 4: "d", 5: "e", 6: "f", 7: "g", 8: "h", 9: "i", 10: "j"}
 
 	var wg sync.WaitGroup
 
-	createFile(&wg, "ranges/tuple.go", writeTupleFile)
-	createFile(&wg, "ranges/zip.go", writeZipFile)
+	createFile(&wg, "tuple.go", writeTupleFile)
+	createFile(&wg, "zip.go", writeZipFile)
 
 	wg.Wait()
 }

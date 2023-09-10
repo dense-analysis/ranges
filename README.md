@@ -3,23 +3,57 @@
 [![Go](https://img.shields.io/badge/pkg-%2311AB00.svg?style=for-the-badge&logo=go&labelColor=555555&logoColor=white)](https://pkg.go.dev/github.com/dense-analysis/ranges) [![CI](https://img.shields.io/github/actions/workflow/status/dense-analysis/ranges/go.yml?branch=master&style=for-the-badge&label=ci&logo=github)](https://github.com/dense-analysis/ranges/actions/workflows/go.yml?query=event%3Apush+branch%3Amaster)
 
 `ranges` implements the nearest implementation of D range-based algorithms in
-Go, for fun and to experiment with what is possible in Go 1.18.
+Go, for fun and to experiment with what is possible in Go 1.18 and above.
+
+Ranges are a concept popular in D and C++ for creating a language by which
+generic algorithms can be define which operate on potentially any type of
+container or sequence of data. Instead of redundantly defining the same
+algorithms over and over again for different types, you instead define how to
+create a range that lazily evaluates a given container or sequence in
+potentially many directions, and existing generic algorithms can be applied to
+the range.
 
 ## Primitives
 
-* `Orderable` Any orderable type.
-* `HasLength` - Any type with a `Length`
-* `OutputRange[T any]` - Any type you can write to with `Put`
-* `InputRange[T any]` - Any type you can iterate over once.
-* `ForwardRange[T any]` - `InputRange[T]` you can iterate over many times.
-* `BidirectionalRange[T any]` - `ForwardRange[T]` you can iterate from the back.
-* `RealNumber` - Any basic real number type.
+The library defines the following ranges primitives, as Go interfaces.
 
-Due to limitations in Go, the following convenience functions are available to
-convert sub types of range to their base types.
+* `OutputRange[T any]` - Any type you can write the following operations:
+  * `Put(element T) error` Write to the output range.
+* `InputRange[T any]` - Anything iterable, with the following operations:
+  * `Empty() bool` - Check if a range is empty.
+  * `Front() T` - Get the current element. May panic if an empty range.
+  * `PopFront()` - Remove the front element. May panic if an empty range.
+* `ForwardRange[T any]` - An `InputRange[T]` with additional operations:
+  * `Save() ForwardRange[T]` - Copy the range and its position.
+* `BidirectionalRange[T any]` - `ForwardRange[T]` with additional operations:
+  * `Back() T` - Get the current end element. May panic if an empty range.
+  * `PopBack() T` - Remove the back/end element. May panic if an empty range.
+  * `SaveB() BidirectionalRange[T]` - Save the position in both directions.
+* `RandomAccessRange[T any]` - A `BidirectionalRange[T]` with additional
+  operations:
+  * `Get(index int) T` Return an element of the range. May panic if out of
+    bounds.
+  * `Len() int` - Return the length of the range.
+  * `SaveR() RandomAccessRange[T]` - Save the position with random access.
+
+Due to limitations in Go versions below 1.21, the following convenience
+functions are available to convert sub types of range to their base types. These
+convenience functions are not necessary in Go 1.21, as the language was updated
+to offer better inference of compatible interface types.
 
 * `I` - Returns `ForwardRange[T]` as `InputRange[T]`.
 * `F` - Returns `BidirectionalRange[T]` as `ForwardRange[T]`.
+* `B` - Returns `RandomAccessRange[T]` as `BidirectionalRange[T]`.
+
+The ranges library defines the following types, which may be used as constraints
+for generic functions.
+
+* `Signed` - Any signed integer primitive type.
+* `Unsigned` - Any signed integer primitive type.
+* `Integer` - Any integer primitive type.
+* `Float` - Any floating point primitive type.
+* `RealNumber` - Any integer or floating point primitive type.
+* `Ordered` - Any primitive type that be ordered.
 
 ### Tuple Types
 
@@ -35,6 +69,58 @@ numbers of items. This library has the following:
 * `Octet` - Holds 8 values of any mix of types.
 * `Ennead` - Holds 9 values of any mix of types.
 * `Decade` - Holds 10 values of any mix of types.
+
+For convenience, every tuple has a `Make` function for creating them, and a
+`Get()` function for returning the values as a Go native tuple, so tuples
+can be and split into multiple values without redundantly naming types.
+
+```go
+// Inferred as Pair[int, string]
+pair := MakePair(1, "hello")
+// Split into int and string values.
+num, str := pair.Get()
+```
+
+## Error Handling
+
+Ranges other than `OutputRange` do not include `error` values as part of their
+types. Algorithms in this library do not result in runtime errors. They may only
+panic when input to the functions producing the ranges is invalid, or when
+attempting to access elements that do not exist. When you wish to place values
+that result in errors, make the errors an explicit part of the type of your
+range such as `InputRange[Pair[T, error]]`.
+
+Remember that in Go you can forward Go's native return tuples as arguments and
+return values, and this integrates well with the ranges library tuple types.
+This can make forwarding errors easier.
+
+```go
+func OtherFunc() int, error { /* ... */ }
+
+func ReturnsValueAndError() int, error {
+  // Create Pair[int, error]
+  // Go can spread the multiple return into the arguments for us.
+  pair := MakePair(OtherFunc())
+
+  // Return both values.
+  return pair.Get()
+}
+```
+
+## Lazy Evaluation
+
+All ranges are lazily-evaluated and compute values anew on demand. This means
+each call to `Front()` or `Back()` on a range will return a new value of `T`.
+
+Modifications to the returned objects may not be reflected in a container, such
+as returning a copy of a struct instead of a pointer to it. When modification
+to elements of an underlying container is necessary, you should create a range
+of pointers, as in `*T`. This will permit modification of underlying values.
+
+Because values are computed on the fly, a call to a callback function may be
+executed each time `Front()` or `Back()` are called for ranges. You may wish to
+cache the results of computation in a chain of ranges by calling one the `Cache`
+functions, including `Cache`, `CacheF`, `CacheB`, and `CacheR`.
 
 ## Algorithms
 
@@ -138,6 +224,8 @@ with an `S` suffix.
   * `CacheF` - Caches results so `Front()` will only be called once per element
     on the original range, unless the range is saved and traversed over multiple
     times.
+  * `CacheB` OR `CacheR` - Caching of `BidirectionalRange` and
+    `RandomAccessRange` elements.
   * `ChunkBy` - Returns an `InputRange` that splits a range into sub-ranges
     when `cb(a, b)` returns `false`.
   * `ChunkByValue` Returns an `InputRange` that splits a range into sub-ranges
@@ -228,6 +316,42 @@ with an `S` suffix.
 * `setops`
   * `CartesianProduct` - Computes the `Cartesian` product of a series of forward
     ranges.
+
+## Implementing New Ranges
+
+New Ranges can be implemented by creating a struct with pointer receivers for
+all of the methods needed to satisfy a type of range. For example:
+
+```go
+// A pointer to this is an InputRange[T] because of the implementation below.
+type newRangeType[T any] struct {
+  // Add whatever data you need.
+}
+
+func (r *newRangeType[T]) Empty() bool { /* ... */ }
+func (r *newRangeType[T]) Front() T    { /* ... */ }
+func (r *newRangeType[T]) PopFront()   { /* ... */ }
+
+func MakeNewRangeType[T any](/* ... */) InputRange[T] {
+  return &newRangeType{/* ... */}
+}
+```
+
+It's important to return pointers to your structs so ranges can be freely
+passed around as a reference type.
+
+## Performance
+
+Wherever possible, algorithms will attempt to minimize allocations. The `Len()`
+of any `RandomAccessRange` objects at runtime, or the `len()` of slices may be
+used to determine how much memory to allocate, or to optimize algorithms to
+avoid unnecessary operations.
+
+Go's compiler is capable of inlining many range function calls, which will
+reduce overhead. Ranges are likely to be stored in the garbage-collected heap.
+The performance of using ranges will therefore be hard to predict. You should
+benchmark and debug your code, and add optimizations where appropriate.
+Significant improvements easily obtained are never premature.
 
 ## Limitations
 

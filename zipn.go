@@ -9,7 +9,7 @@ func (z *zipNResult) Empty() bool {
 }
 
 func (z *zipNResult) Front() []any {
-	return SliceB(MapS(z.ranges, InputRange[any].Front))
+	return SliceB(B(MapS(z.ranges, InputRange[any].Front)))
 }
 
 func (z *zipNResult) PopFront() {
@@ -25,7 +25,7 @@ func (z *zipNFResult) Empty() bool {
 }
 
 func (z *zipNFResult) Front() []any {
-	return SliceB(MapS(z.ranges, ForwardRange[any].Front))
+	return SliceB(B(MapS(z.ranges, ForwardRange[any].Front)))
 }
 
 func (z *zipNFResult) PopFront() {
@@ -33,7 +33,7 @@ func (z *zipNFResult) PopFront() {
 }
 
 func (z *zipNFResult) Save() ForwardRange[[]any] {
-	return &zipNFResult{SliceB(MapS(z.ranges, ForwardRange[any].Save))}
+	return &zipNFResult{SliceB(B(MapS(z.ranges, ForwardRange[any].Save)))}
 }
 
 // ZipN produces items from any n ranges in parallel.

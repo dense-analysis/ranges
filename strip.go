@@ -1,5 +1,6 @@
 package ranges
 
+// stripLeftComparableResult implements StripLeftComparable
 type stripLeftComparableResult[T comparable] struct {
 	r        InputRange[T]
 	value    T
@@ -33,6 +34,7 @@ func (slr *stripLeftComparableResult[T]) PopFront() {
 	slr.r.PopFront()
 }
 
+// stripLeftComparableForwardResult implements StripLeftComparableF
 type stripLeftComparableForwardResult[T comparable] struct {
 	stripLeftComparableResult[T]
 }
@@ -43,6 +45,7 @@ func (slr *stripLeftComparableForwardResult[T]) Save() ForwardRange[T] {
 	}
 }
 
+// stripLeftComparableBidirectionalResult implements StripLeftComparableB
 type stripLeftComparableBidirectionalResult[T comparable] struct {
 	stripLeftComparableResult[T]
 }
@@ -68,30 +71,67 @@ func (slr *stripLeftComparableBidirectionalResult[T]) SaveB() BidirectionalRange
 	}
 }
 
+// stripLeftComparableRandomAccessResult implements StripLeftComparableR
+type stripLeftComparableRandomAccessResult[T comparable] struct {
+	stripLeftComparableBidirectionalResult[T]
+}
+
+func (slr *stripLeftComparableRandomAccessResult[T]) Len() int {
+	slr.prime()
+
+	return slr.r.(RandomAccessRange[T]).Len()
+}
+
+func (slr *stripLeftComparableRandomAccessResult[T]) Get(index int) T {
+	slr.prime()
+
+	return slr.r.(RandomAccessRange[T]).Get(index)
+}
+
+func (slr *stripLeftComparableRandomAccessResult[T]) SaveR() RandomAccessRange[T] {
+	slr.prime()
+
+	return &stripLeftComparableRandomAccessResult[T]{
+		stripLeftComparableBidirectionalResult[T]{
+			stripLeftComparableResult[T]{slr.r.(RandomAccessRange[T]).SaveR(), slr.value, slr.isPrimed},
+		},
+	}
+}
+
 // StripLeftComparable removes elements equal to `value` from the front of a range.
 func StripLeftComparable[T comparable](r InputRange[T], value T) InputRange[T] {
 	return &stripLeftComparableResult[T]{r, value, false}
 }
 
 // StripLeftComparableF is `StripLeftComparable` where the position can be saved.
-func StripLeftComparableB[T comparable](r BidirectionalRange[T], value T) BidirectionalRange[T] {
-	return &stripLeftComparableBidirectionalResult[T]{
-		stripLeftComparableResult[T]{r, value, false},
-	}
-}
-
-// StripLeftComparableB is `StripLeftComparable` where the range can be shrunk from the back.
 func StripLeftComparableF[T comparable](r ForwardRange[T], value T) ForwardRange[T] {
 	return &stripLeftComparableForwardResult[T]{
 		stripLeftComparableResult[T]{r, value, false},
 	}
 }
 
-// StripLeftComparableS is `StripLeftComparableB` accepting a slice.
-func StripLeftComparableS[T comparable](r []T, value T) ForwardRange[T] {
-	return StripLeftComparableB(SliceRange(r), value)
+// StripLeftComparableB is `StripLeftComparableF` where the range can be shrunk from the back.
+func StripLeftComparableB[T comparable](r BidirectionalRange[T], value T) BidirectionalRange[T] {
+	return &stripLeftComparableBidirectionalResult[T]{
+		stripLeftComparableResult[T]{r, value, false},
+	}
 }
 
+// StripLeftComparableR is `StripLeftComparableB` with random access.
+func StripLeftComparableR[T comparable](r RandomAccessRange[T], value T) RandomAccessRange[T] {
+	return &stripLeftComparableRandomAccessResult[T]{
+		stripLeftComparableBidirectionalResult[T]{
+			stripLeftComparableResult[T]{r, value, false},
+		},
+	}
+}
+
+// StripLeftComparableS is `StripLeftComparableR` accepting a slice.
+func StripLeftComparableS[T comparable](r []T, value T) RandomAccessRange[T] {
+	return StripLeftComparableR(SliceRange(r), value)
+}
+
+// stripLeftResult implements StripLeft
 type stripLeftResult[T any] struct {
 	r        InputRange[T]
 	cb       func(a T) bool
@@ -125,6 +165,7 @@ func (slr *stripLeftResult[T]) PopFront() {
 	slr.r.PopFront()
 }
 
+// stripLeftForwardResult implements StripLeftF
 type stripLeftForwardResult[T any] struct {
 	stripLeftResult[T]
 }
@@ -135,6 +176,7 @@ func (slr *stripLeftForwardResult[T]) Save() ForwardRange[T] {
 	}
 }
 
+// stripLeftBidirectionalResult implements StripLeftB
 type stripLeftBidirectionalResult[T any] struct {
 	stripLeftResult[T]
 }
@@ -160,6 +202,31 @@ func (slr *stripLeftBidirectionalResult[T]) SaveB() BidirectionalRange[T] {
 	}
 }
 
+// stripLeftRandomAccessResult implements StripLeftR
+type stripLeftRandomAccessResult[T any] struct {
+	stripLeftBidirectionalResult[T]
+}
+
+func (slr *stripLeftRandomAccessResult[T]) Len() int {
+	slr.prime()
+
+	return slr.r.(RandomAccessRange[T]).Len()
+}
+
+func (slr *stripLeftRandomAccessResult[T]) Get(index int) T {
+	slr.prime()
+
+	return slr.r.(RandomAccessRange[T]).Get(index)
+}
+
+func (slr *stripLeftRandomAccessResult[T]) SaveR() RandomAccessRange[T] {
+	return &stripLeftRandomAccessResult[T]{
+		stripLeftBidirectionalResult[T]{
+			stripLeftResult[T]{slr.r.(RandomAccessRange[T]).SaveR(), slr.cb, slr.isPrimed},
+		},
+	}
+}
+
 // StripLeft removes elements where `cb(a) == true` from the front of a range.
 func StripLeft[T any](r InputRange[T], cb func(a T) bool) InputRange[T] {
 	return &stripLeftResult[T]{r, cb, false}
@@ -175,11 +242,19 @@ func StripLeftB[T any](r BidirectionalRange[T], cb func(a T) bool) Bidirectional
 	return &stripLeftBidirectionalResult[T]{stripLeftResult[T]{r, cb, false}}
 }
 
-// StripLeftS is `StripLeftB` accepting a slice.
-func StripLeftS[T any](r []T, cb func(a T) bool) BidirectionalRange[T] {
-	return StripLeftB(SliceRange(r), cb)
+// StripLeftR is `StripLeftB` with random access.
+func StripLeftR[T any](r RandomAccessRange[T], cb func(a T) bool) RandomAccessRange[T] {
+	return &stripLeftRandomAccessResult[T]{
+		stripLeftBidirectionalResult[T]{stripLeftResult[T]{r, cb, false}},
+	}
 }
 
+// StripLeftS is `StripLeftR` accepting a slice.
+func StripLeftS[T any](r []T, cb func(a T) bool) RandomAccessRange[T] {
+	return StripLeftR(SliceRange(r), cb)
+}
+
+// stripRightComparableResult implements StripRightComparable
 type stripRightComparableResult[T comparable] struct {
 	r        BidirectionalRange[T]
 	value    T
@@ -232,16 +307,51 @@ func (srr *stripRightComparableResult[T]) SaveB() BidirectionalRange[T] {
 	return &stripRightComparableResult[T]{srr.r.SaveB(), srr.value, srr.isPrimed}
 }
 
+// stripRightComparableRandomAccessResult implements StripRightComparableR
+type stripRightComparableRandomAccessResult[T comparable] struct {
+	stripRightComparableResult[T]
+}
+
+func (srr *stripRightComparableRandomAccessResult[T]) Len() int {
+	srr.prime()
+
+	return srr.r.(RandomAccessRange[T]).Len()
+}
+
+func (srr *stripRightComparableRandomAccessResult[T]) Get(index int) T {
+	srr.prime()
+
+	return srr.r.(RandomAccessRange[T]).Get(index)
+}
+
+func (srr *stripRightComparableRandomAccessResult[T]) SaveR() RandomAccessRange[T] {
+	return &stripRightComparableRandomAccessResult[T]{
+		stripRightComparableResult[T]{
+			srr.r.(RandomAccessRange[T]).SaveR(),
+			srr.value,
+			srr.isPrimed,
+		},
+	}
+}
+
 // StripRightComparable removes elements equal to `value` from the back of a range.
 func StripRightComparable[T comparable](r BidirectionalRange[T], value T) BidirectionalRange[T] {
 	return &stripRightComparableResult[T]{r, value, false}
 }
 
-// StripRightComparableS is `StripRightComparable` accepting a slice.
-func StripRightComparableS[T comparable](r []T, value T) BidirectionalRange[T] {
-	return StripRightComparable(SliceRange(r), value)
+// StripRightComparableR is `StripRightComparable` with random access.
+func StripRightComparableR[T comparable](r RandomAccessRange[T], value T) RandomAccessRange[T] {
+	return &stripRightComparableRandomAccessResult[T]{
+		stripRightComparableResult[T]{r, value, false},
+	}
 }
 
+// StripRightComparableS is `StripRightComparableF` accepting a slice.
+func StripRightComparableS[T comparable](r []T, value T) RandomAccessRange[T] {
+	return StripRightComparableR(SliceRange(r), value)
+}
+
+// stripRightResult implements StripRight
 type stripRightResult[T any] struct {
 	r        BidirectionalRange[T]
 	cb       func(a T) bool
@@ -294,16 +404,47 @@ func (srr *stripRightResult[T]) SaveB() BidirectionalRange[T] {
 	return &stripRightResult[T]{srr.r.SaveB(), srr.cb, srr.isPrimed}
 }
 
+// stripRightRandomAccessResult implements StripRightR
+type stripRightRandomAccessResult[T any] struct {
+	stripRightResult[T]
+}
+
+func (srr *stripRightRandomAccessResult[T]) Len() int {
+	srr.prime()
+
+	return srr.r.(RandomAccessRange[T]).Len()
+}
+
+func (srr *stripRightRandomAccessResult[T]) Get(index int) T {
+	srr.prime()
+
+	return srr.r.(RandomAccessRange[T]).Get(index)
+}
+
+func (srr *stripRightResult[T]) SaveR() RandomAccessRange[T] {
+	return &stripRightRandomAccessResult[T]{
+		stripRightResult[T]{srr.r.(RandomAccessRange[T]).SaveR(), srr.cb, srr.isPrimed},
+	}
+}
+
 // StripRight removes elements where `cb(a) == true` from the back of a range.
 func StripRight[T any](r BidirectionalRange[T], cb func(a T) bool) BidirectionalRange[T] {
 	return &stripRightResult[T]{r, cb, false}
 }
 
-// StripRightS is `StripRight` accepting a slice.
-func StripRightS[T any](r []T, cb func(a T) bool) BidirectionalRange[T] {
-	return StripRight(SliceRange(r), cb)
+// StripRightR is `StripRight` with random access.
+func StripRightR[T any](r RandomAccessRange[T], cb func(a T) bool) RandomAccessRange[T] {
+	return &stripRightRandomAccessResult[T]{
+		stripRightResult[T]{r, cb, false},
+	}
 }
 
+// StripRightS is `StripRightR` accepting a slice.
+func StripRightS[T any](r []T, cb func(a T) bool) RandomAccessRange[T] {
+	return StripRightR(SliceRange(r), cb)
+}
+
+// stripComparableResult implements StripComparable
 type stripComparableResult[T comparable] struct {
 	r        BidirectionalRange[T]
 	value    T
@@ -360,16 +501,46 @@ func (sr *stripComparableResult[T]) SaveB() BidirectionalRange[T] {
 	return &stripComparableResult[T]{sr.r.SaveB(), sr.value, sr.isPrimed}
 }
 
+type stripComparableRandomAccessResult[T comparable] struct {
+	stripComparableResult[T]
+}
+
+func (sr *stripComparableRandomAccessResult[T]) Len() int {
+	sr.prime()
+
+	return sr.r.(RandomAccessRange[T]).Len()
+}
+
+func (sr *stripComparableRandomAccessResult[T]) Get(index int) T {
+	sr.prime()
+
+	return sr.r.(RandomAccessRange[T]).Get(index)
+}
+
+func (sr *stripComparableRandomAccessResult[T]) SaveR() RandomAccessRange[T] {
+	return &stripComparableRandomAccessResult[T]{
+		stripComparableResult[T]{sr.r.(RandomAccessRange[T]).SaveR(), sr.value, sr.isPrimed},
+	}
+}
+
 // StripComparable removes elements equal to `value` from the front and back of a range.
 func StripComparable[T comparable](r BidirectionalRange[T], value T) BidirectionalRange[T] {
 	return &stripComparableResult[T]{r, value, false}
 }
 
-// StripComparableS is `StripComparable` accepting a slice.
-func StripComparableS[T comparable](r []T, value T) BidirectionalRange[T] {
-	return StripComparable(SliceRange(r), value)
+// StripComparableR is `StripComparable` with random access.
+func StripComparableR[T comparable](r RandomAccessRange[T], value T) RandomAccessRange[T] {
+	return &stripComparableRandomAccessResult[T]{
+		stripComparableResult[T]{r, value, false},
+	}
 }
 
+// StripComparableS is `StripComparable` accepting a slice.
+func StripComparableS[T comparable](r []T, value T) RandomAccessRange[T] {
+	return StripComparableR(SliceRange(r), value)
+}
+
+// stripResult implement Strip
 type stripResult[T any] struct {
 	r        BidirectionalRange[T]
 	cb       func(a T) bool
@@ -426,12 +597,40 @@ func (sr *stripResult[T]) SaveB() BidirectionalRange[T] {
 	return &stripResult[T]{sr.r.SaveB(), sr.cb, sr.isPrimed}
 }
 
+// stripRandomAccessResult implements StripR
+type stripRandomAccessResult[T any] struct {
+	stripResult[T]
+}
+
+func (sr *stripRandomAccessResult[T]) Get(index int) T {
+	sr.prime()
+
+	return sr.r.(RandomAccessRange[T]).Get(index)
+}
+
+func (sr *stripRandomAccessResult[T]) Len() int {
+	sr.prime()
+
+	return sr.r.(RandomAccessRange[T]).Len()
+}
+
+func (sr *stripRandomAccessResult[T]) SaveR() RandomAccessRange[T] {
+	return &stripRandomAccessResult[T]{
+		stripResult[T]{sr.r.(RandomAccessRange[T]).SaveR(), sr.cb, sr.isPrimed},
+	}
+}
+
 // Strip removes elements where `cb(a) == true` from the front and back of a range.
 func Strip[T any](r BidirectionalRange[T], cb func(a T) bool) BidirectionalRange[T] {
 	return &stripResult[T]{r, cb, false}
 }
 
-// StripS is `Strip` accepting a slice.
-func StripS[T any](r []T, cb func(a T) bool) BidirectionalRange[T] {
-	return Strip(SliceRange(r), cb)
+// StripR is `Strip` with random access.
+func StripR[T any](r RandomAccessRange[T], cb func(a T) bool) RandomAccessRange[T] {
+	return &stripRandomAccessResult[T]{stripResult[T]{r, cb, false}}
+}
+
+// StripS is `StripR` accepting a slice.
+func StripS[T any](r []T, cb func(a T) bool) RandomAccessRange[T] {
+	return StripR(SliceRange(r), cb)
 }

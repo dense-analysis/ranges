@@ -24,7 +24,7 @@ func TestEmptyNilSliceRange(t *testing.T) {
 
 	r := SliceRange([]int(nil))
 
-	assertEmptyB(t, r)
+	assertEmptyR(t, r)
 }
 
 func TestSlicePopFront(t *testing.T) {
@@ -126,7 +126,7 @@ func TestEmptyNilSliceRetroRange(t *testing.T) {
 
 	r := SliceRetroRange([]int(nil))
 
-	assertEmptyB(t, r)
+	assertEmptyR(t, r)
 }
 
 func TestSliceRetroRangeSave(t *testing.T) {
@@ -198,7 +198,7 @@ func TestEmptyNilSlicePtrRange(t *testing.T) {
 
 	r := SlicePtrRange([]int(nil))
 
-	assertEmptyB(t, r)
+	assertEmptyR(t, r)
 }
 
 func TestSlicePtrRangeSave(t *testing.T) {
@@ -270,7 +270,7 @@ func TestEmptyNilSlicePtrRetroRange(t *testing.T) {
 
 	r := SlicePtrRetroRange([]int(nil))
 
-	assertEmptyB(t, r)
+	assertEmptyR(t, r)
 }
 
 func TestSlicePtrRetroRangeSave(t *testing.T) {
@@ -314,7 +314,7 @@ func TestSlice(t *testing.T) {
 func TestSliceF(t *testing.T) {
 	t.Parallel()
 
-	sliceCopy := SliceF(F(SliceRange([]int{1, 2, 3})))
+	sliceCopy := SliceF(F(B(SliceRange([]int{1, 2, 3}))))
 
 	assertEqual(t, sliceCopy, []int{1, 2, 3})
 }
@@ -322,15 +322,39 @@ func TestSliceF(t *testing.T) {
 func TestSliceB(t *testing.T) {
 	t.Parallel()
 
-	sliceCopy := SliceB(SliceRange([]int{1, 2, 3}))
+	sliceCopy := SliceB(B(SliceRange([]int{1, 2, 3})))
 
 	assertEqual(t, sliceCopy, []int{1, 2, 3})
+}
+
+func TestSliceR(t *testing.T) {
+	t.Parallel()
+
+	r := SliceRange([]int{1, 2, 3})
+	sliceCopy := SliceR(r)
+
+	assertEqual(t, sliceCopy, []int{1, 2, 3})
+	// We should consume the range when we copy it.
+	assertEmptyR(t, r)
+}
+
+// Test how we handle ranges with the wrong lengths for SliceR
+func TestSliceRWithInvalidLengthRange(t *testing.T) {
+	t.Parallel()
+
+	// We should take more elements than the length says in case of a short length.
+	sliceCopy := SliceR(badLengthRange(SliceRange([]int{1, 2, 3}), 2))
+	assertEqual(t, sliceCopy, []int{1, 2, 3})
+
+	// We should take as many as there are in case of a too long length.
+	sliceCopy2 := SliceR(badLengthRange(SliceRange([]int{1, 2, 3}), 4))
+	assertEqual(t, sliceCopy2, []int{1, 2, 3})
 }
 
 func TestBytes(t *testing.T) {
 	t.Parallel()
 
-	if string(SliceB(Bytes("abc"))) != "abc" {
+	if string(SliceR(Bytes("abc"))) != "abc" {
 		t.Error("Bytes did not represent the string correctly")
 	}
 }
@@ -358,7 +382,7 @@ func TestRunes(t *testing.T) {
 
 	r.PopFront()
 
-	assertEmptyB(t, r)
+	assertEmptyR(t, r)
 }
 
 func TestRunesBack(t *testing.T) {
@@ -384,13 +408,25 @@ func TestRunesBack(t *testing.T) {
 
 	r.PopBack()
 
-	assertEmptyB(t, r)
+	assertEmptyR(t, r)
 }
 
 func TestRunesToString(t *testing.T) {
 	t.Parallel()
 
-	if string(SliceB(Runes("日本語"))) != "日本語" {
+	if string(SliceB(B(Runes("日本語")))) != "日本語" {
+		t.Error("We couldn't covert a string to runes and back again")
+	}
+
+	if String(Runes("日本語")) != "日本語" {
+		t.Error("We couldn't covert a string to runes and back again")
+	}
+}
+
+func TestRunsToStringRandomAccessSpecialization(t *testing.T) {
+	t.Parallel()
+
+	if string(SliceR(Runes("日本語"))) != "日本語" {
 		t.Error("We couldn't covert a string to runes and back again")
 	}
 

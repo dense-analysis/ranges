@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.4.0
+
+* Added support for `RandomAccessRange` across the board.
+  * The addition of random access ranges may still break code due to weak
+    type inference in Go versions below 1.21.
+* The unused `HasLength` interface is deprecated.
+* `B`, `F`, and `I` functions are not marked deprecated, but will be removed
+  when the library is updated to support only Go 1.21.
+
 ## v0.3.0
 
 * Added `Get` functions for turning any fixed tuple type into a native tuple.

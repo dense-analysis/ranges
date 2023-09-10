@@ -29,5 +29,5 @@ func CommonPrefixF[T any, U any](
 
 // CommonPrefixS is `CommonPrefix` accepting slices.
 func CommonPrefixS[T any, U any](r1 []T, r2 []U, cb func(element1 T, element2 U) bool) ForwardRange[T] {
-	return CommonPrefix(F(SliceRange(r1)), I(F(SliceRange(r2))), cb)
+	return CommonPrefix(F(B(SliceRange(r1))), I(F(B(SliceRange(r2)))), cb)
 }

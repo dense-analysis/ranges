@@ -80,7 +80,7 @@ func CacheF[T any](r ForwardRange[T]) ForwardRange[T] {
 
 // CacheB is `CacheF` for bidrectional ranges.
 //
-// Traversing in both directions could the same expression to be evaluated twice.
+// Traversing in both directions could cause the same expression to be evaluated twice.
 // If the range is saved, `Front()` or `Back()` will be called multiple times.
 func CacheB[T any](r BidirectionalRange[T]) BidirectionalRange[T] {
 	return &cacheBidirectionalResult[T]{cacheResult[T]{r, *new(T), false}, *new(T), false}

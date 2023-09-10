@@ -104,6 +104,10 @@ func SkipOver[T any, U any](
 }
 
 // Length returns the length of a range in O(n) time.
+//
+// The range is exhausted.
+//
+// If your range is a RandomAccessRange, use `r.Len()` instead.
 func Length[T any](r InputRange[T]) int {
 	count := 0
 

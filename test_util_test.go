@@ -44,6 +44,11 @@ func assertEmptyB[T any](t *testing.T, r BidirectionalRange[T]) {
 	assertEmpty[T](t, r)
 }
 
+func assertEmptyR[T any](t *testing.T, r RandomAccessRange[T]) {
+	t.Helper()
+	assertEmpty[T](t, r)
+}
+
 func assertNotEmpty[T any](t *testing.T, r InputRange[T]) {
 	t.Helper()
 
@@ -58,6 +63,11 @@ func assertNotEmptyF[T any](t *testing.T, r ForwardRange[T]) {
 }
 
 func assertNotEmptyB[T any](t *testing.T, r BidirectionalRange[T]) {
+	t.Helper()
+	assertNotEmpty[T](t, r)
+}
+
+func assertNotEmptyR[T any](t *testing.T, r RandomAccessRange[T]) {
 	t.Helper()
 	assertNotEmpty[T](t, r)
 }
@@ -86,6 +96,11 @@ func assertHasFrontB[T any](t *testing.T, r BidirectionalRange[T], value T) {
 	assertHasFront[T](t, r, value)
 }
 
+func assertHasFrontR[T any](t *testing.T, r RandomAccessRange[T], value T) {
+	t.Helper()
+	assertHasFront[T](t, r, value)
+}
+
 func assertHasBack[T any](t *testing.T, r BidirectionalRange[T], value T) {
 	t.Helper()
 
@@ -100,6 +115,11 @@ func assertHasBack[T any](t *testing.T, r BidirectionalRange[T], value T) {
 	}
 }
 
+func assertHasBackR[T any](t *testing.T, r RandomAccessRange[T], value T) {
+	t.Helper()
+	assertHasBack(t, B(r), value)
+}
+
 func assertHasSaveableFront[T any](t *testing.T, r ForwardRange[T], value T) {
 	t.Helper()
 	assertHasFront[T](t, r, value)
@@ -112,7 +132,12 @@ func assertHasSaveableFront[T any](t *testing.T, r ForwardRange[T], value T) {
 
 func assertHasSaveableFrontB[T any](t *testing.T, r BidirectionalRange[T], value T) {
 	t.Helper()
-	assertHasSaveableFront(t, r.(ForwardRange[T]), value)
+	assertHasSaveableFront(t, F(r), value)
+}
+
+func assertHasSaveableFrontR[T any](t *testing.T, r RandomAccessRange[T], value T) {
+	t.Helper()
+	assertHasSaveableFront(t, F(B(r)), value)
 }
 
 func assertHasSaveableBack[T any](t *testing.T, r BidirectionalRange[T], value T) {
@@ -123,4 +148,46 @@ func assertHasSaveableBack[T any](t *testing.T, r BidirectionalRange[T], value T
 	r.PopBack()
 
 	assertHasBack(t, rSave, value)
+}
+
+func assertHasSaveableBackR[T any](t *testing.T, r RandomAccessRange[T], value T) {
+	t.Helper()
+	assertHasSaveableBack(t, B(r), value)
+}
+
+// lengthOnlyRange panics on all calls accept a Length() check.
+// This can be used in tests to ensure we run length check optimizations.
+type lengthOnlyRange[T any] struct {
+	length int
+}
+
+func (r *lengthOnlyRange[T]) Len() int                     { return r.length }
+func (r *lengthOnlyRange[T]) Front() T                     { panic("Front() not implemented") }
+func (r *lengthOnlyRange[T]) PopFront()                    { panic("PopFront() not implemented") }
+func (r *lengthOnlyRange[T]) Empty() bool                  { panic("Empty() not implemented") }
+func (r *lengthOnlyRange[T]) Back() T                      { panic("Back() not implemented") }
+func (r *lengthOnlyRange[T]) PopBack()                     { panic("PopBack() not implemented") }
+func (r *lengthOnlyRange[T]) Get(index int) T              { panic("Get() not implemented") }
+func (r *lengthOnlyRange[T]) Save() ForwardRange[T]        { panic("Save() not implemented") }
+func (r *lengthOnlyRange[T]) SaveB() BidirectionalRange[T] { panic("SaveB() not implemented") }
+func (r *lengthOnlyRange[T]) SaveR() RandomAccessRange[T]  { panic("SaveB() not implemented") }
+
+// lengthOnly returns a RandomAccessRange that only implements Len()
+// This can be used in tests to ensure we run length check optimizations.
+func lengthOnly[T any](length int) RandomAccessRange[T] {
+	return &lengthOnlyRange[T]{length}
+}
+
+// badLengthRangeImpl implements badLengthRange
+type badLengthRangeImpl[T any] struct {
+	RandomAccessRange[T]
+	badLength int
+}
+
+func (r *badLengthRangeImpl[T]) Len() int { return r.badLength }
+
+// badLengthRange returns a RandomAccess range where the length can set improperly.
+// this can be used to test how algorithms behave with flawed input.
+func badLengthRange[T any](r RandomAccessRange[T], badLength int) RandomAccessRange[T] {
+	return &badLengthRangeImpl[T]{r, badLength}
 }

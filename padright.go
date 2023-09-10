@@ -66,5 +66,5 @@ func PadRightF[T any](r ForwardRange[T], value T, count int) ForwardRange[T] {
 
 // PadRightS is `PadRightF` accepting a slice
 func PadRightS[T any](r []T, value T, count int) ForwardRange[T] {
-	return PadRightF(F(SliceRange(r)), value, count)
+	return PadRightF(F(B(SliceRange(r))), value, count)
 }

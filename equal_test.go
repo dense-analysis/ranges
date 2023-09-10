@@ -51,6 +51,17 @@ func TestEqualComparableSInts(t *testing.T) {
 	}
 }
 
+func TestEqualComparibleLengthOptimization(t *testing.T) {
+	t.Parallel()
+
+	if EqualComparable(
+		I(F(B(lengthOnly[string](3)))),
+		I(F(B(lengthOnly[string](4)))),
+	) {
+		t.Error("length check optimization failed")
+	}
+}
+
 func TestEqualInts(t *testing.T) {
 	t.Parallel()
 
@@ -107,7 +118,19 @@ func TestEqualSInts(t *testing.T) {
 func TestEqualRunes(t *testing.T) {
 	t.Parallel()
 
-	if !Equal(I(F(Runes("abc"))), I(F(Runes("abc"))), Eq[rune]) {
+	if !Equal(I(F(B(Runes("abc")))), I(F(B(Runes("abc")))), Eq[rune]) {
 		t.Error("abc comparison failed")
+	}
+}
+
+func TestEqualLengthOptimization(t *testing.T) {
+	t.Parallel()
+
+	if Equal(
+		I(F(B(lengthOnly[string](3)))),
+		I(F(B(lengthOnly[string](4)))),
+		Eq[string],
+	) {
+		t.Error("length check optimization failed")
 	}
 }

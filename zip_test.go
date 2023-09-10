@@ -6,8 +6,8 @@ func TestZip2(t *testing.T) {
 	output := Slice(
 		Map(
 			Zip2(
-				I(F(Only(1, 2, 3, 4))),
-				I(F(Only(4, 5, 6))),
+				I(F(B(Only(1, 2, 3, 4)))),
+				I(F(B(Only(4, 5, 6)))),
 			),
 			func(e Pair[int, int]) []int {
 				return []int{e.A, e.B}
@@ -26,9 +26,9 @@ func TestZip3(t *testing.T) {
 	output := Slice(
 		Map(
 			Zip3(
-				I(F(Only(1, 2, 3, 4))),
-				I(F(Only(4.0, 5.0, 6.0, 7.0))),
-				I(F(Only(9, 8, 7))),
+				I(F(B(Only(1, 2, 3, 4)))),
+				I(F(B(Only(4.0, 5.0, 6.0, 7.0)))),
+				I(F(B(Only(9, 8, 7)))),
 			),
 			func(e Triplet[int, float64, int]) []int {
 				return []int{e.A, int(e.B), e.C}
@@ -46,10 +46,10 @@ func TestZip3(t *testing.T) {
 func TestZip4F(t *testing.T) {
 	r := MapF(
 		Zip4F(
-			F(Only(1, 2, 3, 4)),
-			F(Only(4.0, 5.0, 6.0, 7.0)),
-			F(Only(9, 8, 7)),
-			F(Only(-1.0, -2.0, -3.0)),
+			F(B(Only(1, 2, 3, 4))),
+			F(B(Only(4.0, 5.0, 6.0, 7.0))),
+			F(B(Only(9, 8, 7))),
+			F(B(Only(-1.0, -2.0, -3.0))),
 		),
 		func(e Quartet[int, float64, int, float64]) []int {
 			return []int{e.A, int(e.B), e.C, int(e.D)}

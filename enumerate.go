@@ -1,5 +1,6 @@
 package ranges
 
+// enumerateResult implements Enumerate
 type enumerateResult[T any] struct {
 	index int
 	r     InputRange[T]
@@ -9,6 +10,7 @@ func (r *enumerateResult[T]) Empty() bool         { return r.r.Empty() }
 func (r *enumerateResult[T]) Front() Pair[int, T] { return MakePair(r.index, r.r.Front()) }
 func (r *enumerateResult[T]) PopFront()           { r.r.PopFront(); r.index++ }
 
+// enumerateForwardResult implements EnumerateF
 type enumerateForwardResult[T any] struct{ enumerateResult[T] }
 
 func (r *enumerateForwardResult[T]) Save() ForwardRange[Pair[int, T]] {

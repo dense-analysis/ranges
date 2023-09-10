@@ -7,7 +7,7 @@ func TestEach(t *testing.T) {
 
 	values := make([]int, 0, 3)
 
-	Each(I(F(Only(7, 1, 2))), func(element int) { values = append(values, element) })
+	Each(I(F(B(Only(7, 1, 2)))), func(element int) { values = append(values, element) })
 
 	assertEqual(t, values, []int{7, 1, 2})
 }
@@ -27,7 +27,7 @@ func TestExhaust(t *testing.T) {
 
 	r := Only(1, 2, 3)
 
-	Exhaust(I(F(r)))
+	Exhaust(I(F(B(r))))
 
-	assertEmpty(t, I(F(r)))
+	assertEmpty(t, I(F(B(r))))
 }

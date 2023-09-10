@@ -6,7 +6,7 @@ func TestReduce(t *testing.T) {
 	t.Parallel()
 
 	result := Reduce(
-		I(F(Only(100, 10, 1))),
+		I(F(B(Only(100, 10, 1)))),
 		func(a float64, b int) float64 { return a + float64(b) },
 		1000.0,
 	)
@@ -30,7 +30,7 @@ func TestReduceNoSeed(t *testing.T) {
 	t.Parallel()
 
 	result := ReduceNoSeed(
-		I(F(Only(100, 10, 1))),
+		I(F(B(Only(100, 10, 1)))),
 		func(a, b int) int { return a + b },
 	)
 

@@ -64,7 +64,7 @@ func TestChunkF(t *testing.T) {
 	t.Parallel()
 
 	input := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
-	chunks := ChunksF(F(SliceRange(input)), 2)
+	chunks := ChunksF(F(B(SliceRange(input))), 2)
 	allValues := make([][]int, 0, len(input)/2)
 	const saveAt = 2
 	i := 0

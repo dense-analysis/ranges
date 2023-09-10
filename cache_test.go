@@ -7,13 +7,13 @@ import (
 func TestCache(t *testing.T) {
 	t.Parallel()
 
-	assertEqual(t, Slice(Cache(I(F(Null[int]())))), []int{})
-	assertEqual(t, Slice(Cache(I(F(Only(1, 2, 3))))), []int{1, 2, 3})
+	assertEqual(t, Slice(Cache(I(F(B(Null[int]()))))), []int{})
+	assertEqual(t, Slice(Cache(I(F(B(Only(1, 2, 3)))))), []int{1, 2, 3})
 
 	storedValues := make([]int, 0)
 
 	r := Cache(
-		Map(I(F(Only(5, 6, 7))), func(elem int) int { storedValues = append(storedValues, elem); return elem }),
+		Map(I(F(B(Only(5, 6, 7)))), func(elem int) int { storedValues = append(storedValues, elem); return elem }),
 	)
 
 	r.Front()
@@ -32,13 +32,13 @@ func TestCache(t *testing.T) {
 func TestCacheF(t *testing.T) {
 	t.Parallel()
 
-	assertEqual(t, SliceF(CacheF(F(Null[int]()))), []int{})
-	assertEqual(t, SliceF(CacheF(F(Only(1, 2, 3)))), []int{1, 2, 3})
+	assertEqual(t, SliceF(CacheF(F(B(Null[int]())))), []int{})
+	assertEqual(t, SliceF(CacheF(F(B(Only(1, 2, 3))))), []int{1, 2, 3})
 
 	storedValues := make([]int, 0)
 
 	r := CacheF(
-		MapF(F(Only(5, 6, 7)), func(elem int) int { storedValues = append(storedValues, elem); return elem }),
+		MapF(F(B(Only(5, 6, 7))), func(elem int) int { storedValues = append(storedValues, elem); return elem }),
 	)
 
 	r.Front()
@@ -65,13 +65,13 @@ func TestCacheF(t *testing.T) {
 func TestCacheB(t *testing.T) {
 	t.Parallel()
 
-	assertEqual(t, SliceB(CacheB(Null[int]())), []int{})
-	assertEqual(t, SliceB(CacheB(Only(1, 2, 3))), []int{1, 2, 3})
+	assertEqual(t, SliceB(CacheB(B(Null[int]()))), []int{})
+	assertEqual(t, SliceB(CacheB(B(Only(1, 2, 3)))), []int{1, 2, 3})
 
 	storedValues := make([]int, 0)
 
 	r := CacheB(
-		MapB(Only(5, 6, 7), func(elem int) int { storedValues = append(storedValues, elem); return elem }),
+		MapB(B(Only(5, 6, 7)), func(elem int) int { storedValues = append(storedValues, elem); return elem }),
 	)
 
 	r.Front()
@@ -98,13 +98,13 @@ func TestCacheB(t *testing.T) {
 func TestCacheBBack(t *testing.T) {
 	t.Parallel()
 
-	assertEqual(t, SliceB(Retro(CacheB(Null[int]()))), []int{})
-	assertEqual(t, SliceB(Retro(CacheB(Only(1, 2, 3)))), []int{3, 2, 1})
+	assertEqual(t, SliceB(Retro(CacheB(B(Null[int]())))), []int{})
+	assertEqual(t, SliceB(Retro(CacheB(B(Only(1, 2, 3))))), []int{3, 2, 1})
 
 	storedValues := make([]int, 0)
 
 	r := CacheB(
-		MapB(Only(5, 6, 7), func(elem int) int { storedValues = append(storedValues, elem); return elem }),
+		MapB(B(Only(5, 6, 7)), func(elem int) int { storedValues = append(storedValues, elem); return elem }),
 	)
 
 	r.Back()

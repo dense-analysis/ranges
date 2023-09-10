@@ -15,10 +15,10 @@ func TestPadRight(t *testing.T) {
 func TestPadRightF(t *testing.T) {
 	t.Parallel()
 
-	assertEqual(t, String(PadRightF(F(Runes("abc")), 'x', 5)), "abcxx")
-	assertEqual(t, String(PadRightF(F(Runes("abcdef")), 'x', 5)), "abcdef")
+	assertEqual(t, String(PadRightF(F(B(Runes("abc"))), 'x', 5)), "abcxx")
+	assertEqual(t, String(PadRightF(F(B(Runes("abcdef"))), 'x', 5)), "abcdef")
 
-	r := PadRightF(F(Runes("日")), '本', 3)
+	r := PadRightF(F(B(Runes("日"))), '本', 3)
 
 	r2 := r.Save()
 
