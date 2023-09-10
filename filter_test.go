@@ -35,18 +35,18 @@ func TestFilterB(t *testing.T) {
 	fr.PopFront()
 	fr.PopFront()
 
-	assertEmptyB(t, fr)
-	assertHasFrontB(t, fr2, 2)
+	assertEmpty(t, fr)
+	assertHasFront(t, fr2, 2)
 	assertHasBack(t, fr2, 4)
 
 	fr2.PopBack()
 
-	assertHasFrontB(t, fr2, 2)
+	assertHasFront(t, fr2, 2)
 	assertHasBack(t, fr2, 2)
 
 	fr2.PopFront()
 
-	assertEmptyB(t, fr2)
+	assertEmpty(t, fr2)
 }
 
 func TestFilterSB(t *testing.T) {

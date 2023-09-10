@@ -5,7 +5,7 @@ import "testing"
 func TestPermutations(t *testing.T) {
 	t.Parallel()
 
-	assertEmptyF(t, Permutations([]int{}))
+	assertEmpty(t, Permutations([]int{}))
 
 	assertEqual(
 		t,
@@ -40,17 +40,17 @@ func TestPermutationsSave(t *testing.T) {
 
 	r := Permutations([]int{1, 2, 3})
 
-	assertHasFrontF(t, r, []int{1, 2, 3})
-	assertHasFrontF(t, r, []int{1, 2, 3})
+	assertHasFront(t, r, []int{1, 2, 3})
+	assertHasFront(t, r, []int{1, 2, 3})
 
 	r.PopFront()
 
-	assertHasFrontF(t, r, []int{2, 1, 3})
+	assertHasFront(t, r, []int{2, 1, 3})
 
 	rSave := r.Save()
 
 	r.PopFront()
 
-	assertHasFrontF(t, r, []int{3, 1, 2})
-	assertHasFrontF(t, rSave, []int{2, 1, 3})
+	assertHasFront(t, r, []int{3, 1, 2})
+	assertHasFront(t, rSave, []int{2, 1, 3})
 }

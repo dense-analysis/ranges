@@ -39,11 +39,11 @@ func TestTakeF(t *testing.T) {
 func TestTakeFZero(t *testing.T) {
 	t.Parallel()
 
-	assertEmptyF(t, TakeF(Only(1), 0))
+	assertEmpty(t, TakeF(Only(1), 0))
 }
 
 func TestTakeFNegative(t *testing.T) {
 	t.Parallel()
 
-	assertEmptyF(t, TakeF(Only(1), -10))
+	assertEmpty(t, TakeF(Only(1), -10))
 }

@@ -20,11 +20,11 @@ func TestMapF(t *testing.T) {
 
 	fr.PopFront()
 
-	assertHasFrontF(t, fr2, 2.0)
+	assertHasFront(t, fr2, 2.0)
 
 	fr2.PopFront()
 
-	assertHasFrontF(t, fr2, 4.0)
+	assertHasFront(t, fr2, 4.0)
 }
 
 func TestMapB(t *testing.T) {

@@ -143,7 +143,7 @@ func TestCountUntil(t *testing.T) {
 		t.Fatalf("CountUntil counted %d instead of 2 even elements", res1)
 	}
 
-	assertHasFrontF(t, r, 3)
+	assertHasFront(t, r, 3)
 
 	res2 := CountUntil[int](Only(1, 1, 3, 4, 5), func(x int) bool { return x%2 == 0 })
 

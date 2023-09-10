@@ -52,7 +52,7 @@ func TestUniqComparableB(t *testing.T) {
 	result2 := SliceB(Retro(UniqComparableB(Only(4, 1, 2, 2, 3, 4, 4, 5))))
 	assertEqual(t, result2, []int{5, 4, 3, 2, 1, 4})
 
-	assertHasSaveableFrontB(t, UniqComparableB(Only(4, 1)), 4)
+	assertHasSaveableFront(t, UniqComparableB(Only(4, 1)), 4)
 	assertHasSaveableBack(t, UniqComparableB(Only(4, 1)), 1)
 }
 

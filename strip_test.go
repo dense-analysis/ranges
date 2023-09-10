@@ -58,8 +58,8 @@ func TestStripLeftComparableR(t *testing.T) {
 	// Popping the original shouldn't change a saved one.
 	r.PopFront()
 	r.PopBack()
-	assertHasFrontR(t, r2, 3)
-	assertHasBackR(t, r2, 2)
+	assertHasFront(t, r2, 3)
+	assertHasBack(t, r2, 2)
 }
 
 func TestStripLeftComparableS(t *testing.T) {
@@ -122,8 +122,8 @@ func TestStripLeftR(t *testing.T) {
 	// Popping the original shouldn't change a saved one.
 	r.PopFront()
 	r.PopBack()
-	assertHasFrontR(t, r2, 3)
-	assertHasBackR(t, r2, 2)
+	assertHasFront(t, r2, 3)
+	assertHasBack(t, r2, 2)
 }
 
 func TestStripRightComparable(t *testing.T) {
@@ -136,7 +136,7 @@ func TestStripRightComparable(t *testing.T) {
 	r := StripRightComparable(Only(0, 1, 2, 3, 0, 0), 0)
 
 	assertHasSaveableBack(t, r, 3)
-	assertHasSaveableFrontB(t, r, 0)
+	assertHasSaveableFront(t, r, 0)
 }
 
 func TestStripRightComparableR(t *testing.T) {
@@ -154,8 +154,8 @@ func TestStripRightComparableR(t *testing.T) {
 	// Popping the original shouldn't change a saved one.
 	r.PopFront()
 	r.PopBack()
-	assertHasFrontR(t, r2, 3)
-	assertHasBackR(t, r2, 2)
+	assertHasFront(t, r2, 3)
+	assertHasBack(t, r2, 2)
 }
 
 func TestStripRightComparableS(t *testing.T) {
@@ -167,8 +167,8 @@ func TestStripRightComparableS(t *testing.T) {
 
 	r := StripRightComparableS([]int{0, 1, 2, 3, 0, 0}, 0)
 
-	assertHasSaveableBackR(t, r, 3)
-	assertHasSaveableFrontR(t, r, 0)
+	assertHasSaveableBack(t, r, 3)
+	assertHasSaveableFront(t, r, 0)
 }
 
 func TestStripRight(t *testing.T) {
@@ -181,7 +181,7 @@ func TestStripRight(t *testing.T) {
 	r := StripRight(Only(0, 1, 2, 3, 0, 0), func(a int) bool { return a == 0 })
 
 	assertHasSaveableBack(t, r, 3)
-	assertHasSaveableFrontB(t, r, 0)
+	assertHasSaveableFront(t, r, 0)
 }
 
 func TestStripRightR(t *testing.T) {
@@ -199,8 +199,8 @@ func TestStripRightR(t *testing.T) {
 	// Popping the original shouldn't change a saved one.
 	r.PopFront()
 	r.PopBack()
-	assertHasFrontR(t, r2, 3)
-	assertHasBackR(t, r2, 2)
+	assertHasFront(t, r2, 3)
+	assertHasBack(t, r2, 2)
 }
 
 func TestStripRightS(t *testing.T) {
@@ -212,8 +212,8 @@ func TestStripRightS(t *testing.T) {
 
 	r := StripRightS([]int{0, 1, 2, 3, 0, 0}, func(a int) bool { return a == 0 })
 
-	assertHasSaveableBackR(t, r, 3)
-	assertHasSaveableFrontR(t, r, 0)
+	assertHasSaveableBack(t, r, 3)
+	assertHasSaveableFront(t, r, 0)
 }
 
 func TestStripComparable(t *testing.T) {
@@ -222,8 +222,8 @@ func TestStripComparable(t *testing.T) {
 	r := StripComparable(Only(0, 0, 0, 1, 0, 2, 0, 0), 0)
 
 	assertHasSaveableBack(t, r, 2)
-	assertHasSaveableFrontB(t, r, 1)
-	assertHasFrontB(t, r, 0)
+	assertHasSaveableFront(t, r, 1)
+	assertHasFront(t, r, 0)
 }
 
 func TestStripComparableR(t *testing.T) {
@@ -240,7 +240,7 @@ func TestStripComparableR(t *testing.T) {
 
 	// Test that saving don't change the original range.
 	r2.PopFront()
-	assertHasFrontR(t, r, 1)
+	assertHasFront(t, r, 1)
 }
 
 func TestStripComparableS(t *testing.T) {
@@ -248,9 +248,9 @@ func TestStripComparableS(t *testing.T) {
 
 	r := StripComparableS([]int{0, 0, 0, 1, 0, 2, 0, 0}, 0)
 
-	assertHasSaveableBackR(t, r, 2)
-	assertHasSaveableFrontR(t, r, 1)
-	assertHasFrontR(t, r, 0)
+	assertHasSaveableBack(t, r, 2)
+	assertHasSaveableFront(t, r, 1)
+	assertHasFront(t, r, 0)
 }
 
 func TestStrip(t *testing.T) {
@@ -259,8 +259,8 @@ func TestStrip(t *testing.T) {
 	r := Strip(Only(0, 0, 0, 1, 0, 2, 0, 0), func(a int) bool { return a == 0 })
 
 	assertHasSaveableBack(t, r, 2)
-	assertHasSaveableFrontB(t, r, 1)
-	assertHasFrontB(t, r, 0)
+	assertHasSaveableFront(t, r, 1)
+	assertHasFront(t, r, 0)
 }
 
 func TestStripR(t *testing.T) {
@@ -277,7 +277,7 @@ func TestStripR(t *testing.T) {
 
 	// Test that saving don't change the original range.
 	r2.PopFront()
-	assertHasFrontR(t, r, 1)
+	assertHasFront(t, r, 1)
 }
 
 func TestStripS(t *testing.T) {
@@ -285,7 +285,7 @@ func TestStripS(t *testing.T) {
 
 	r := StripS([]int{0, 0, 0, 1, 0, 2, 0, 0}, func(a int) bool { return a == 0 })
 
-	assertHasSaveableBackR(t, r, 2)
-	assertHasSaveableFrontR(t, r, 1)
-	assertHasFrontR(t, r, 0)
+	assertHasSaveableBack(t, r, 2)
+	assertHasSaveableFront(t, r, 1)
+	assertHasFront(t, r, 0)
 }

@@ -24,7 +24,7 @@ func TestEmptyNilSliceRange(t *testing.T) {
 
 	r := SliceRange([]int(nil))
 
-	assertEmptyR(t, r)
+	assertEmpty(t, r)
 }
 
 func TestSlicePopFront(t *testing.T) {
@@ -126,7 +126,7 @@ func TestEmptyNilSliceRetroRange(t *testing.T) {
 
 	r := SliceRetroRange([]int(nil))
 
-	assertEmptyR(t, r)
+	assertEmpty(t, r)
 }
 
 func TestSliceRetroRangeSave(t *testing.T) {
@@ -198,7 +198,7 @@ func TestEmptyNilSlicePtrRange(t *testing.T) {
 
 	r := SlicePtrRange([]int(nil))
 
-	assertEmptyR(t, r)
+	assertEmpty(t, r)
 }
 
 func TestSlicePtrRangeSave(t *testing.T) {
@@ -270,7 +270,7 @@ func TestEmptyNilSlicePtrRetroRange(t *testing.T) {
 
 	r := SlicePtrRetroRange([]int(nil))
 
-	assertEmptyR(t, r)
+	assertEmpty(t, r)
 }
 
 func TestSlicePtrRetroRangeSave(t *testing.T) {
@@ -335,7 +335,7 @@ func TestSliceR(t *testing.T) {
 
 	assertEqual(t, sliceCopy, []int{1, 2, 3})
 	// We should consume the range when we copy it.
-	assertEmptyR(t, r)
+	assertEmpty(t, r)
 }
 
 // Test how we handle ranges with the wrong lengths for SliceR
@@ -382,7 +382,7 @@ func TestRunes(t *testing.T) {
 
 	r.PopFront()
 
-	assertEmptyR(t, r)
+	assertEmpty(t, r)
 }
 
 func TestRunesBack(t *testing.T) {
@@ -408,7 +408,7 @@ func TestRunesBack(t *testing.T) {
 
 	r.PopBack()
 
-	assertEmptyR(t, r)
+	assertEmpty(t, r)
 }
 
 func TestRunesToString(t *testing.T) {

@@ -52,6 +52,6 @@ func TestRoundRobinF(t *testing.T) {
 
 	r.PopFront()
 
-	assertHasFrontF(t, r2, 2)
-	assertHasFrontF(t, r, 3)
+	assertHasFront(t, r2, 2)
+	assertHasFront(t, r, 3)
 }

@@ -13,22 +13,22 @@ func TestSplitter(t *testing.T) {
 		Runes(","),
 	)
 
-	assertNotEmptyF(t, r)
+	assertNotEmpty(t, r)
 	assertEqual(t, string(SliceF(r.Front())), "123")
 
 	r.PopFront()
 
-	assertNotEmptyF(t, r)
+	assertNotEmpty(t, r)
 	assertEqual(t, string(SliceF(r.Front())), "456")
 
 	r.PopFront()
 
-	assertNotEmptyF(t, r)
+	assertNotEmpty(t, r)
 	assertEqual(t, string(SliceF(r.Front())), "789")
 
 	r.PopFront()
 
-	assertEmptyF(t, r)
+	assertEmpty(t, r)
 
 	assertPanic(t, "PopFront() called on an empty Splitter() range", func() { r.PopFront() })
 }

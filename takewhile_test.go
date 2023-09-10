@@ -8,7 +8,7 @@ func TestTakeWhile(t *testing.T) {
 	sr := Only(1, 3, 2, 4)
 	r := TakeWhile[int](sr, func(x int) bool { return x%2 == 1 })
 
-	assertHasFrontF(t, sr, 1)
+	assertHasFront(t, sr, 1)
 
 	r.PopFront()
 	assertEqual(t, Slice(r), []int{3})
@@ -23,11 +23,11 @@ func TestTakeWhileF(t *testing.T) {
 
 	r := TakeWhileF(Only(1, 2, 3), func(x int) bool { return x%2 == 1 })
 
-	assertNotEmptyF(t, r)
+	assertNotEmpty(t, r)
 
 	rSave := r.Save()
 	r.PopFront()
 
-	assertEmptyF(t, r)
-	assertNotEmptyF(t, rSave)
+	assertEmpty(t, r)
+	assertNotEmpty(t, rSave)
 }

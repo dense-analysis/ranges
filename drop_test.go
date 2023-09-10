@@ -60,7 +60,7 @@ func TestDropFCallFrontFirst(t *testing.T) {
 
 	dropRange := DropF(Only(1, 2, 3, 4, 5), 3)
 
-	assertHasFrontF(t, dropRange, 4)
+	assertHasFront(t, dropRange, 4)
 }
 
 func TestDropFCallPopFrontFirst(t *testing.T) {
@@ -69,7 +69,7 @@ func TestDropFCallPopFrontFirst(t *testing.T) {
 	dropRange := DropF(Only(1, 2, 3, 4, 5), 3)
 
 	dropRange.PopFront()
-	assertHasFrontF(t, dropRange, 5)
+	assertHasFront(t, dropRange, 5)
 }
 
 func TestDropFZero(t *testing.T) {
@@ -103,7 +103,7 @@ func TestDropB(t *testing.T) {
 	dropRange.PopBack()
 	assertHasBack(t, dropRange, 4)
 	dropRange.PopBack()
-	assertEmptyB(t, dropRange)
+	assertEmpty(t, dropRange)
 }
 
 func TestDropR(t *testing.T) {

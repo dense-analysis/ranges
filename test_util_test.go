@@ -34,42 +34,12 @@ func assertEmpty[T any](t *testing.T, r InputRange[T]) {
 	}
 }
 
-func assertEmptyF[T any](t *testing.T, r ForwardRange[T]) {
-	t.Helper()
-	assertEmpty[T](t, r)
-}
-
-func assertEmptyB[T any](t *testing.T, r BidirectionalRange[T]) {
-	t.Helper()
-	assertEmpty[T](t, r)
-}
-
-func assertEmptyR[T any](t *testing.T, r RandomAccessRange[T]) {
-	t.Helper()
-	assertEmpty[T](t, r)
-}
-
 func assertNotEmpty[T any](t *testing.T, r InputRange[T]) {
 	t.Helper()
 
 	if r.Empty() {
 		t.Fatal("The range was empty")
 	}
-}
-
-func assertNotEmptyF[T any](t *testing.T, r ForwardRange[T]) {
-	t.Helper()
-	assertNotEmpty[T](t, r)
-}
-
-func assertNotEmptyB[T any](t *testing.T, r BidirectionalRange[T]) {
-	t.Helper()
-	assertNotEmpty[T](t, r)
-}
-
-func assertNotEmptyR[T any](t *testing.T, r RandomAccessRange[T]) {
-	t.Helper()
-	assertNotEmpty[T](t, r)
 }
 
 func assertHasFront[T any](t *testing.T, r InputRange[T], value T) {
@@ -86,21 +56,6 @@ func assertHasFront[T any](t *testing.T, r InputRange[T], value T) {
 	}
 }
 
-func assertHasFrontF[T any](t *testing.T, r ForwardRange[T], value T) {
-	t.Helper()
-	assertHasFront[T](t, r, value)
-}
-
-func assertHasFrontB[T any](t *testing.T, r BidirectionalRange[T], value T) {
-	t.Helper()
-	assertHasFront[T](t, r, value)
-}
-
-func assertHasFrontR[T any](t *testing.T, r RandomAccessRange[T], value T) {
-	t.Helper()
-	assertHasFront[T](t, r, value)
-}
-
 func assertHasBack[T any](t *testing.T, r BidirectionalRange[T], value T) {
 	t.Helper()
 
@@ -115,11 +70,6 @@ func assertHasBack[T any](t *testing.T, r BidirectionalRange[T], value T) {
 	}
 }
 
-func assertHasBackR[T any](t *testing.T, r RandomAccessRange[T], value T) {
-	t.Helper()
-	assertHasBack(t, r, value)
-}
-
 func assertHasSaveableFront[T any](t *testing.T, r ForwardRange[T], value T) {
 	t.Helper()
 	assertHasFront[T](t, r, value)
@@ -130,16 +80,6 @@ func assertHasSaveableFront[T any](t *testing.T, r ForwardRange[T], value T) {
 	assertHasFront[T](t, rSave, value)
 }
 
-func assertHasSaveableFrontB[T any](t *testing.T, r BidirectionalRange[T], value T) {
-	t.Helper()
-	assertHasSaveableFront(t, r, value)
-}
-
-func assertHasSaveableFrontR[T any](t *testing.T, r RandomAccessRange[T], value T) {
-	t.Helper()
-	assertHasSaveableFront(t, r, value)
-}
-
 func assertHasSaveableBack[T any](t *testing.T, r BidirectionalRange[T], value T) {
 	t.Helper()
 	assertHasBack(t, r, value)
@@ -148,11 +88,6 @@ func assertHasSaveableBack[T any](t *testing.T, r BidirectionalRange[T], value T
 	r.PopBack()
 
 	assertHasBack(t, rSave, value)
-}
-
-func assertHasSaveableBackR[T any](t *testing.T, r RandomAccessRange[T], value T) {
-	t.Helper()
-	assertHasSaveableBack(t, r, value)
 }
 
 // lengthOnlyRange panics on all calls accept a Length() check.

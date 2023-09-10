@@ -14,8 +14,8 @@ func TestRetro(t *testing.T) {
 	s1.PopFront()
 	s2.PopBack()
 
-	assertHasFrontF(t, s1, "b")
-	assertHasFrontB(t, s2, "c")
+	assertHasFront(t, s1, "b")
+	assertHasFront(t, s2, "c")
 	assertHasBack(t, s2, "b")
 	assertHasBack(t, r, "a")
 }
@@ -33,8 +33,8 @@ func TestRetroR(t *testing.T) {
 	s1.PopFront()
 	s2.PopBack()
 
-	assertHasFrontB(t, s1, "b")
-	assertHasFrontR(t, s2, "c")
-	assertHasBackR(t, s2, "b")
-	assertHasBackR(t, r, "a")
+	assertHasFront(t, s1, "b")
+	assertHasFront(t, s2, "c")
+	assertHasBack(t, s2, "b")
+	assertHasBack(t, r, "a")
 }

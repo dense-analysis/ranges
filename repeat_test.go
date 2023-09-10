@@ -8,8 +8,8 @@ func TestRepeat(t *testing.T) {
 	repeater := Repeat(3)
 
 	for i := 0; i < 3; i++ {
-		assertHasFrontB(t, repeater, 3)
-		assertNotEmptyB(t, repeater)
+		assertHasFront(t, repeater, 3)
+		assertNotEmpty(t, repeater)
 		repeater.PopFront()
 	}
 
@@ -17,7 +17,7 @@ func TestRepeat(t *testing.T) {
 
 	for i := 0; i < 3; i++ {
 		assertHasBack(t, repeater, 3)
-		assertNotEmptyB(t, repeater)
+		assertNotEmpty(t, repeater)
 		repeater.PopBack()
 	}
 }
@@ -28,8 +28,8 @@ func TestGenerate(t *testing.T) {
 	generator := Generate(func() int { return 3 })
 
 	for i := 0; i < 3; i++ {
-		assertHasFrontB(t, generator, 3)
-		assertNotEmptyB(t, generator)
+		assertHasFront(t, generator, 3)
+		assertNotEmpty(t, generator)
 		generator.PopFront()
 	}
 
@@ -37,7 +37,7 @@ func TestGenerate(t *testing.T) {
 
 	for i := 0; i < 3; i++ {
 		assertHasBack(t, generator, 3)
-		assertNotEmptyB(t, generator)
+		assertNotEmpty(t, generator)
 		generator.PopBack()
 	}
 }

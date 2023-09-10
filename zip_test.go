@@ -56,19 +56,19 @@ func TestZip4F(t *testing.T) {
 		},
 	)
 
-	assertHasFrontF(t, r, []int{1, 4, 9, -1})
+	assertHasFront(t, r, []int{1, 4, 9, -1})
 
 	r.PopFront()
 
-	assertHasFrontF(t, r, []int{2, 5, 8, -2})
+	assertHasFront(t, r, []int{2, 5, 8, -2})
 
 	rSave := r.Save()
 	r.PopFront()
 
-	assertHasFrontF(t, rSave, []int{2, 5, 8, -2})
-	assertHasFrontF(t, r, []int{3, 6, 7, -3})
+	assertHasFront(t, rSave, []int{2, 5, 8, -2})
+	assertHasFront(t, r, []int{3, 6, 7, -3})
 
 	r.PopFront()
 
-	assertEmptyF(t, r)
+	assertEmpty(t, r)
 }

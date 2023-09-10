@@ -7,7 +7,7 @@ func TestNull(t *testing.T) {
 
 	null := Null[int]()
 
-	assertEmptyR(t, null)
+	assertEmpty(t, null)
 	assertEqual(t, null.Len(), 0)
 }
 

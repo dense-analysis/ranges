@@ -36,7 +36,7 @@ func TestStrideF(t *testing.T) {
 func TestStrideS(t *testing.T) {
 	t.Parallel()
 
-	assertEmptyF(t, StrideS([]int{}, 1))
+	assertEmpty(t, StrideS([]int{}, 1))
 
 	assertEqual(
 		t,
