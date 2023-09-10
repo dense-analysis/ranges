@@ -36,15 +36,6 @@ The library defines the following ranges primitives, as Go interfaces.
   * `Len() int` - Return the length of the range.
   * `SaveR() RandomAccessRange[T]` - Save the position with random access.
 
-Due to limitations in Go versions below 1.21, the following convenience
-functions are available to convert sub types of range to their base types. These
-convenience functions are not necessary in Go 1.21, as the language was updated
-to offer better inference of compatible interface types.
-
-* `I` - Returns `ForwardRange[T]` as `InputRange[T]`.
-* `F` - Returns `BidirectionalRange[T]` as `ForwardRange[T]`.
-* `B` - Returns `RandomAccessRange[T]` as `BidirectionalRange[T]`.
-
 The ranges library defines the following types, which may be used as constraints
 for generic functions.
 
@@ -372,35 +363,6 @@ in Go. This means a user can be led to choosing a suboptimal save function.
 There's no way around this in Go. In D, saving a range automatically carries
 across the more specific details of the range type, such as `RandomAccessRange`
 `save` method returning a `RandomAccessRange`.
-
-### Weak inference of ForwardRange[T] as InputRange[T] before Go 1.21
-
-You cannot write the following in Go versions below 1.21:
-
-```go
-r := Only(1, 2, 3, 4)
-sliceCopy := Slice(Filter(r, func(element int) bool { return element % 2 == 0 }))
-\\                      ^ Go can't take T from ForwardRange[T]
-```
-
-But the following is fine:
-
-```go
-r := Only(1, 2, 3, 4)
-sliceCopy := Slice(Filter[int](r, func(element int) bool { return element % 2 == 0 }))
-\\                       ^ Now Go knows T and we can pass ForwardRange[T]
-```
-
-Go 1.2.1 fixed this issue by adding better type inference, so the former case
-should just work in Go 1.21.
-
-For this reason variations of the functions exist to require less typing.
-
-```go
-r := Only(1, 2, 3, 4)
-sliceCopy := SliceF(FilterF(r, func(element int) bool { return element % 2 == 0 }))
-\\                ^       ^ We accept ForwardRanges, so Go figures it out.
-```
 
 ### No tuple types and variadic generics
 

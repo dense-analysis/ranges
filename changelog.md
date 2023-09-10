@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.0.0
+
+* Raised the minimum supported Go version to 1.21, which offers much better
+  type inference, and make the library easier to maintain.
+* `HasLength` has been removed.
+* The `B`, `F`, and `I` functions have been removed.
+
 ## v0.4.0
 
 * Added support for `RandomAccessRange` across the board.

@@ -33,9 +33,12 @@ func TestFlatten(t *testing.T) {
 
 	result := Slice(
 		Flatten[int](
-			Only(
-				I(F(B(Only(1, 2, 3)))),
-				I(F(B(Only(4, 5)))),
+			MapF(
+				Only(
+					Only(1, 2, 3),
+					Only(4, 5),
+				),
+				func(x RandomAccessRange[int]) InputRange[int] { return x },
 			),
 		),
 	)
@@ -57,8 +60,8 @@ func TestChainF(t *testing.T) {
 	}
 
 	chain := ChainF(
-		ChainF(F(B(Only(1, 2))), F(B(Null[int]())), F(B(Only(3, 4)))),
-		ChainF(F(B(Null[int]())), F(B(Only(5, 6))), F(B(Null[int]()))),
+		ChainF(Only(1, 2), Null[int](), Only(3, 4)),
+		ChainF(Null[int](), Only(5, 6), Null[int]()),
 	)
 
 	chain.PopFront()
@@ -92,8 +95,8 @@ func TestChainB(t *testing.T) {
 	}
 
 	chain := ChainB(
-		ChainB(B(Only(1, 2)), B(Null[int]()), B(Only(3, 4))),
-		ChainB(B(Null[int]()), B(Only(5, 6)), B(Null[int]())),
+		ChainB(Only(1, 2), Null[int](), Only(3, 4)),
+		ChainB(Null[int](), Only(5, 6), Null[int]()),
 	)
 
 	chain.PopBack()
@@ -105,7 +108,7 @@ func TestChainB(t *testing.T) {
 	assertEqual(t, SliceB(chain), []int{1, 2, 3})
 	assertEqual(t, SliceB(savedChain), []int{1, 2, 3})
 
-	chain2 := ChainB(B(Only(1, 2)), B(Null[int]()), B(Only(3, 4)), B(Null[int]()))
+	chain2 := ChainB(Only(1, 2), Null[int](), Only(3, 4), Null[int]())
 
 	assertEqual(t, SliceB(Retro(chain2)), []int{4, 3, 2, 1})
 }
@@ -128,13 +131,16 @@ func TestFrontTransversal(t *testing.T) {
 
 	sliceCopy := Slice(
 		FrontTransversal[int](
-			Only(
-				I(F(B(Only(1, 2)))),
-				I(F(B(Only[int]()))),
-				I(F(B(Only(3, 4)))),
-				I(F(B(Only[int]()))),
-				I(F(B(Only(5, 6)))),
-				I(F(B(Only[int]()))),
+			MapR(
+				Only(
+					Only(1, 2),
+					Only[int](),
+					Only(3, 4),
+					Only[int](),
+					Only(5, 6),
+					Only[int](),
+				),
+				func(x RandomAccessRange[int]) InputRange[int] { return x },
 			),
 		),
 	)
@@ -145,21 +151,24 @@ func TestFrontTransversal(t *testing.T) {
 func TestFrontTransversalF(t *testing.T) {
 	t.Parallel()
 
-	empty := FrontTransversalF(F(B(Null[ForwardRange[int]]())))
+	empty := FrontTransversalF(Null[ForwardRange[int]]())
 
 	if !empty.Empty() {
 		t.Fatal("An empty transversal was not empty")
 	}
 
 	transversal := FrontTransversalF(
-		F(B(Only(
-			F(B(Only(1, 2))),
-			F(B(Only[int]())),
-			F(B(Only(3, 4))),
-			F(B(Only[int]())),
-			F(B(Only(5, 6))),
-			F(B(Only[int]())),
-		))),
+		MapR(
+			Only(
+				Only(1, 2),
+				Only[int](),
+				Only(3, 4),
+				Only[int](),
+				Only(5, 6),
+				Only[int](),
+			),
+			func(x RandomAccessRange[int]) ForwardRange[int] { return x },
+		),
 	)
 
 	transversal.PopFront()
@@ -172,21 +181,24 @@ func TestFrontTransversalF(t *testing.T) {
 func TestFrontTransversalB(t *testing.T) {
 	t.Parallel()
 
-	empty := FrontTransversalB(B(Null[BidirectionalRange[int]]()))
+	empty := FrontTransversalB(Null[BidirectionalRange[int]]())
 
 	if !empty.Empty() {
 		t.Fatal("An empty transversal was not empty")
 	}
 
 	transversal := FrontTransversalB(
-		B(Only(
-			B(Only(1, 2)),
-			B(Only[int]()),
-			B(Only(3, 4)),
-			B(Only[int]()),
-			B(Only(5, 6)),
-			B(Only[int]()),
-		)),
+		MapB(
+			Only(
+				Only(1, 2),
+				Only[int](),
+				Only(3, 4),
+				Only[int](),
+				Only(5, 6),
+				Only[int](),
+			),
+			func(x RandomAccessRange[int]) BidirectionalRange[int] { return x },
+		),
 	)
 
 	transversal.PopFront()
@@ -196,14 +208,17 @@ func TestFrontTransversalB(t *testing.T) {
 	assertEqual(t, SliceB(savedTransversal), []int{3, 5})
 
 	transversal2 := FrontTransversalB(
-		B(Only(
-			B(Only(1, 2)),
-			B(Only[int]()),
-			B(Only(3, 4)),
-			B(Only[int]()),
-			B(Only(5, 6)),
-			B(Only[int]()),
-		)),
+		MapB(
+			Only(
+				Only(1, 2),
+				Only[int](),
+				Only(3, 4),
+				Only[int](),
+				Only(5, 6),
+				Only[int](),
+			),
+			func(x RandomAccessRange[int]) BidirectionalRange[int] { return x },
+		),
 	)
 
 	transversal2.PopBack()

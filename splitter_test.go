@@ -8,9 +8,9 @@ func TestSplitter(t *testing.T) {
 	t.Parallel()
 
 	r := Splitter(
-		F(B(Runes("123,456,789"))),
+		Runes("123,456,789"),
 		Eq[rune],
-		F(B(Runes(","))),
+		Runes(","),
 	)
 
 	assertNotEmptyF(t, r)
@@ -37,9 +37,9 @@ func TestSplitterSave(t *testing.T) {
 	t.Parallel()
 
 	r := Splitter(
-		F(B(Runes("123,456,789"))),
+		Runes("123,456,789"),
 		Eq[rune],
-		F(B(Runes(","))),
+		Runes(","),
 	)
 
 	r1 := r.Save()
@@ -60,9 +60,9 @@ func TestSplitterToSlice(t *testing.T) {
 	result := SliceF(
 		MapF(
 			Splitter(
-				F(B(Runes("123,456,789"))),
+				Runes("123,456,789"),
 				Eq[rune],
-				F(B(Runes(","))),
+				Runes(","),
 			),
 			Pipe2(SliceF[rune], StringS),
 		),
@@ -81,9 +81,9 @@ func TestSplitterLeadingEmptySplit(t *testing.T) {
 	result := SliceF(
 		MapF(
 			Splitter(
-				F(B(Only(0, 4, 5, 6, 0, 7, 8, 9))),
+				Only(0, 4, 5, 6, 0, 7, 8, 9),
 				Eq[int],
-				F(B(Only(0))),
+				Only(0),
 			),
 			SliceF[int],
 		),
@@ -102,9 +102,9 @@ func TestSplitterTrailingEmptySplit(t *testing.T) {
 	result := SliceF(
 		MapF(
 			Splitter(
-				F(B(Only(4, 5, 6, 0, 7, 8, 9, 0))),
+				Only(4, 5, 6, 0, 7, 8, 9, 0),
 				Eq[int],
-				F(B(Only(0))),
+				Only(0),
 			),
 			SliceF[int],
 		),
@@ -123,9 +123,9 @@ func TestSplitterMultipleCharacters(t *testing.T) {
 	result := SliceF(
 		MapF(
 			Splitter(
-				F(B(Runes("<>12<3<>45>6<>789<>"))),
+				Runes("<>12<3<>45>6<>789<>"),
 				Eq[rune],
-				F(B(Runes("<>"))),
+				Runes("<>"),
 			),
 			Pipe2(SliceF[rune], StringS),
 		),
@@ -145,7 +145,7 @@ func TestSplitterEmpty(t *testing.T) {
 
 	result := SliceF(
 		MapF(
-			Splitter(F(B(Runes(""))), Eq[rune], F(B(Runes(",")))),
+			Splitter(Runes(""), Eq[rune], Runes(",")),
 			Pipe2(SliceF[rune], StringS),
 		),
 	)
@@ -161,7 +161,7 @@ func TestSplitterS(t *testing.T) {
 			SplitterS(
 				[]rune("<>12<3<>45>6<>789<>"),
 				Eq[rune],
-				F(B(Runes("<>"))),
+				Runes("<>"),
 			),
 			Pipe2(SliceF[rune], StringS),
 		),
@@ -205,8 +205,8 @@ func TestSplitterComparable(t *testing.T) {
 	result := SliceF(
 		MapF(
 			SplitterComparable(
-				F(B(Runes("<>12<3<>45>6<>789<>"))),
-				F(B(Runes("<>"))),
+				Runes("<>12<3<>45>6<>789<>"),
+				Runes("<>"),
 			),
 			Pipe2(SliceF[rune], StringS),
 		),
@@ -228,7 +228,7 @@ func TestSplitterComparableS(t *testing.T) {
 		MapF(
 			SplitterComparableS(
 				[]rune("<>12<3<>45>6<>789<>"),
-				F(B(Runes("<>"))),
+				Runes("<>"),
 			),
 			Pipe2(SliceF[rune], StringS),
 		),
@@ -313,7 +313,7 @@ func TestSplitWhen(t *testing.T) {
 	result := Slice(
 		Map(
 			SplitWhen(
-				I(F(B(SliceRange([]int{4, 3, 2, 11, 0, -3, -3, 5, 3, 0})))),
+				SliceRange([]int{4, 3, 2, 11, 0, -3, -3, 5, 3, 0}),
 				func(a, b int) bool { return a <= b },
 			),
 			Slice[int],

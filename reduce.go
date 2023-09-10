@@ -13,7 +13,7 @@ func Reduce[T, U any](r InputRange[T], cb func(a U, b T) U, seed U) U {
 
 // ReduceS is `Reduce` accepting a slice.
 func ReduceS[T, U any](r []T, cb func(a U, b T) U, seed U) U {
-	return Reduce(I(F(B(SliceRange(r)))), cb, seed)
+	return Reduce(SliceRange(r), cb, seed)
 }
 
 // ReduceNoSeed is `Reduce` where the the range is assumed not to be empty, and
@@ -39,5 +39,5 @@ func ReduceNoSeed[T any](r InputRange[T], cb func(a T, b T) T) T {
 
 // ReduceNoSeedS is `ReduceNoSeed` accepting a slice.
 func ReduceNoSeedS[T any](r []T, cb func(a T, b T) T) T {
-	return ReduceNoSeed(I(F(B(SliceRange(r)))), cb)
+	return ReduceNoSeed(SliceRange(r), cb)
 }

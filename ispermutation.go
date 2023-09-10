@@ -50,14 +50,14 @@ func IsPermutationNoAlloc[T comparable](r1 ForwardRange[T], r2 ForwardRange[T]) 
 		return r2.Empty()
 	}
 
-	if !IsSameLength(I(r1.Save()), I(r2.Save())) {
+	if !IsSameLength(r1.Save(), r2.Save()) {
 		return false
 	}
 
 	for r1Saved := r1.Save(); !r1Saved.Empty(); r1Saved.PopFront() {
 		this := r1Saved.Front()
-		r1Count := Count(I(r1.Save()), func(other T) bool { return this == other })
-		r2Count := Count(I(r2.Save()), func(other T) bool { return this == other })
+		r1Count := Count(r1.Save(), func(other T) bool { return this == other })
+		r2Count := Count(r2.Save(), func(other T) bool { return this == other })
 
 		if r1Count != r2Count {
 			return false

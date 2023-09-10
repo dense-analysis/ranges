@@ -7,7 +7,7 @@ func TestCartesianProduct2(t *testing.T) {
 
 	assertEqual(
 		t,
-		SliceF(CartesianProduct2(F(Iota(2)), F(Iota(3)))),
+		SliceF(CartesianProduct2(Iota(2), Iota(3))),
 		[]Pair[int, int]{
 			{0, 0},
 			{0, 1},
@@ -19,7 +19,7 @@ func TestCartesianProduct2(t *testing.T) {
 	)
 	assertEqual(
 		t,
-		SliceF(CartesianProduct2(F(Iota(3)), F(Iota(2)))),
+		SliceF(CartesianProduct2(Iota(3), Iota(2))),
 		[]Pair[int, int]{
 			{0, 0},
 			{0, 1},
@@ -36,7 +36,7 @@ func TestCartesianProduct3(t *testing.T) {
 
 	assertEqual(
 		t,
-		SliceF(CartesianProduct3(F(B(Runes("abc"))), F(Iota(2)), F(B(Runes("xyz"))))),
+		SliceF(CartesianProduct3(Runes("abc"), Iota(2), Runes("xyz"))),
 		[]Triplet[rune, int, rune]{
 			{'a', 0, 'x'}, {'a', 0, 'y'}, {'a', 0, 'z'}, {'a', 1, 'x'}, {'a', 1, 'y'}, {'a', 1, 'z'}, {'b', 0, 'x'}, {'b', 0, 'y'}, {'b', 0, 'z'}, {'b', 1, 'x'}, {'b', 1, 'y'}, {'b', 1, 'z'}, {'c', 0, 'x'}, {'c', 0, 'y'}, {'c', 0, 'z'}, {'c', 1, 'x'}, {'c', 1, 'y'}, {'c', 1, 'z'},
 		},
@@ -48,7 +48,7 @@ func TestCartesianProduct4(t *testing.T) {
 
 	assertEqual(
 		t,
-		SliceF(CartesianProduct4(F(B(Runes("abc"))), F(Iota(2)), F(B(Runes("xyz"))), F(B(Runes("42"))))),
+		SliceF(CartesianProduct4(Runes("abc"), Iota(2), Runes("xyz"), Runes("42"))),
 		[]Quartet[rune, int, rune, rune]{
 			{'a', 0, 'x', '4'}, {'a', 0, 'x', '2'}, {'a', 0, 'y', '4'}, {'a', 0, 'y', '2'}, {'a', 0, 'z', '4'},
 			{'a', 0, 'z', '2'}, {'a', 1, 'x', '4'}, {'a', 1, 'x', '2'}, {'a', 1, 'y', '4'}, {'a', 1, 'y', '2'},
@@ -68,20 +68,20 @@ func TestCartesianProduct10(t *testing.T) {
 	assertEqual(
 		t,
 		SliceF(CartesianProduct10(
-			F(Iota(2)),
-			F(Iota(2)),
-			F(Iota(2)),
-			F(Iota(2)),
-			F(Iota(2)),
-			F(Iota(2)),
-			F(Iota(2)),
-			F(Iota(2)),
-			F(Iota(2)),
-			F(Iota(2)),
+			Iota(2),
+			Iota(2),
+			Iota(2),
+			Iota(2),
+			Iota(2),
+			Iota(2),
+			Iota(2),
+			Iota(2),
+			Iota(2),
+			Iota(2),
 		)),
 		SliceF(
 			MapF(
-				F(Iota(1024)),
+				Iota(1024),
 				func(num int) Decade[int, int, int, int, int, int, int, int, int, int] {
 					return MakeDecade(
 						(num&512)>>9,

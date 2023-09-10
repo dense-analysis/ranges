@@ -249,17 +249,17 @@ func FlattenB[T any](r BidirectionalRange[BidirectionalRange[T]]) BidirectionalR
 
 // FlattenS is `FlattenF` accepting a slice.
 func FlattenS[T any](r []ForwardRange[T]) ForwardRange[T] {
-	return FlattenF(F(B(SliceRange(r))))
+	return FlattenF(SliceRange(r))
 }
 
 // FlattenSB is `FlattenS` for bidirectional ranges.
 func FlattenSB[T any](r []BidirectionalRange[T]) BidirectionalRange[T] {
-	return FlattenB(B(SliceRange(r)))
+	return FlattenB(SliceRange(r))
 }
 
 // FlattenSS is `FlattenB` accepting a slice of slices.
 func FlattenSS[T any](r [][]T) BidirectionalRange[T] {
-	return FlattenB(B(MapS(r, func(s []T) BidirectionalRange[T] { return B(SliceRange(s)) })))
+	return FlattenB(MapS(r, func(s []T) BidirectionalRange[T] { return SliceRange(s) }))
 }
 
 // FrontTransversal yields the first value in each range, skipping empty ranges.
@@ -284,12 +284,12 @@ func Chain[T any](ranges ...InputRange[T]) InputRange[T] {
 
 // ChainF is `Chain` where the range can be saved.
 func ChainF[T any](ranges ...ForwardRange[T]) ForwardRange[T] {
-	return FlattenF(F(B(SliceRange(ranges))))
+	return FlattenF(SliceRange(ranges))
 }
 
 // ChainB is `ChainF` that can be shrunk from the back.
 func ChainB[T any](ranges ...BidirectionalRange[T]) BidirectionalRange[T] {
-	return FlattenB(B(SliceRange(ranges)))
+	return FlattenB(SliceRange(ranges))
 }
 
 // ChainS is `ChainB` accepting many slices.

@@ -63,7 +63,7 @@ func FilterF[T any](r ForwardRange[T], cb func(element T) bool) ForwardRange[T] 
 // Returns a ForwardRange, which is more efficient when moving forwards.
 // `FilterSB` can be advanced in both directions.
 func FilterS[T any](slice []T, cb func(element T) bool) ForwardRange[T] {
-	return FilterF(F(B(SliceRange(slice))), cb)
+	return FilterF(SliceRange(slice), cb)
 }
 
 type filterBidirectionalResult[T any] struct {
@@ -144,10 +144,10 @@ func FilterB[T any](r BidirectionalRange[T], cb func(element T) bool) Bidirectio
 	return &filterBidirectionalResult[T]{cb, r, false}
 }
 
-// FilterS is `FilterB` accepting a slice.
+// FilterSB is `FilterB` accepting a slice.
 //
 // This is less efficient for moving forward than `FilterS`, as the filtered
 // range must be primed in both directions.
 func FilterSB[T any](slice []T, cb func(element T) bool) BidirectionalRange[T] {
-	return FilterB(B(SliceRange(slice)), cb)
+	return FilterB(SliceRange(slice), cb)
 }

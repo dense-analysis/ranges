@@ -29,7 +29,7 @@ func TestFilterB(t *testing.T) {
 	t.Parallel()
 
 	r := Only(1, 2, 3, 4)
-	fr := FilterB(B(r), func(element int) bool { return element%2 == 0 })
+	fr := FilterB(r, func(element int) bool { return element%2 == 0 })
 	fr2 := fr.SaveB()
 
 	fr.PopFront()

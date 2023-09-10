@@ -117,7 +117,7 @@ func assertHasBack[T any](t *testing.T, r BidirectionalRange[T], value T) {
 
 func assertHasBackR[T any](t *testing.T, r RandomAccessRange[T], value T) {
 	t.Helper()
-	assertHasBack(t, B(r), value)
+	assertHasBack(t, r, value)
 }
 
 func assertHasSaveableFront[T any](t *testing.T, r ForwardRange[T], value T) {
@@ -132,12 +132,12 @@ func assertHasSaveableFront[T any](t *testing.T, r ForwardRange[T], value T) {
 
 func assertHasSaveableFrontB[T any](t *testing.T, r BidirectionalRange[T], value T) {
 	t.Helper()
-	assertHasSaveableFront(t, F(r), value)
+	assertHasSaveableFront(t, r, value)
 }
 
 func assertHasSaveableFrontR[T any](t *testing.T, r RandomAccessRange[T], value T) {
 	t.Helper()
-	assertHasSaveableFront(t, F(B(r)), value)
+	assertHasSaveableFront(t, r, value)
 }
 
 func assertHasSaveableBack[T any](t *testing.T, r BidirectionalRange[T], value T) {
@@ -152,7 +152,7 @@ func assertHasSaveableBack[T any](t *testing.T, r BidirectionalRange[T], value T
 
 func assertHasSaveableBackR[T any](t *testing.T, r RandomAccessRange[T], value T) {
 	t.Helper()
-	assertHasSaveableBack(t, B(r), value)
+	assertHasSaveableBack(t, r, value)
 }
 
 // lengthOnlyRange panics on all calls accept a Length() check.

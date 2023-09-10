@@ -314,7 +314,7 @@ func TestSlice(t *testing.T) {
 func TestSliceF(t *testing.T) {
 	t.Parallel()
 
-	sliceCopy := SliceF(F(B(SliceRange([]int{1, 2, 3}))))
+	sliceCopy := SliceF(SliceRange([]int{1, 2, 3}))
 
 	assertEqual(t, sliceCopy, []int{1, 2, 3})
 }
@@ -322,7 +322,7 @@ func TestSliceF(t *testing.T) {
 func TestSliceB(t *testing.T) {
 	t.Parallel()
 
-	sliceCopy := SliceB(B(SliceRange([]int{1, 2, 3})))
+	sliceCopy := SliceB(SliceRange([]int{1, 2, 3}))
 
 	assertEqual(t, sliceCopy, []int{1, 2, 3})
 }
@@ -414,7 +414,7 @@ func TestRunesBack(t *testing.T) {
 func TestRunesToString(t *testing.T) {
 	t.Parallel()
 
-	if string(SliceB(B(Runes("日本語")))) != "日本語" {
+	if string(SliceB(Runes("日本語"))) != "日本語" {
 		t.Error("We couldn't covert a string to runes and back again")
 	}
 

@@ -126,7 +126,7 @@ func UniqB[T any](r BidirectionalRange[T], cb func(a, b T) bool) BidirectionalRa
 
 // UniqS is `UniqB` accepting a slice.
 func UniqS[T any](r []T, cb func(a, b T) bool) BidirectionalRange[T] {
-	return UniqB(B(SliceRange(r)), cb)
+	return UniqB(SliceRange(r), cb)
 }
 
 // UniqComparable removes adjacent entries where `a == b`
@@ -146,5 +146,5 @@ func UniqComparableB[T comparable](r BidirectionalRange[T]) BidirectionalRange[T
 
 // UniqComparableS is `UniqComparableB` accepting a slice.
 func UniqComparableS[T comparable](r []T) BidirectionalRange[T] {
-	return UniqComparableB(B(SliceRange(r)))
+	return UniqComparableB(SliceRange(r))
 }

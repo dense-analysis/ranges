@@ -27,7 +27,7 @@ func TestTake(t *testing.T) {
 func TestTakeF(t *testing.T) {
 	t.Parallel()
 
-	takeForwardResult := TakeF(F(B(Only(1, 2, 3, 4, 5))), 3)
+	takeForwardResult := TakeF(Only(1, 2, 3, 4, 5), 3)
 
 	sliceCopy := SliceF(takeForwardResult.Save())
 	sliceCopy2 := SliceF(takeForwardResult.Save())
@@ -39,11 +39,11 @@ func TestTakeF(t *testing.T) {
 func TestTakeFZero(t *testing.T) {
 	t.Parallel()
 
-	assertEmptyF(t, TakeF(F(B(Only(1))), 0))
+	assertEmptyF(t, TakeF(Only(1), 0))
 }
 
 func TestTakeFNegative(t *testing.T) {
 	t.Parallel()
 
-	assertEmptyF(t, TakeF(F(B(Only(1))), -10))
+	assertEmptyF(t, TakeF(Only(1), -10))
 }

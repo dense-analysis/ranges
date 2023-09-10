@@ -38,8 +38,8 @@ func TestTakeCycleRepeat(t *testing.T) {
 		TakeF(
 			Cycle(
 				ChainF(
-					F(B(Only(1, 2, 3))),
-					F(Repeat(4)),
+					Only(1, 2, 3),
+					Repeat(4),
 				),
 			),
 			5,

@@ -5,9 +5,9 @@ import "testing"
 func TestRetro(t *testing.T) {
 	t.Parallel()
 
-	assertEqual(t, SliceB(Retro(B(Only(1, 2, 3)))), []int{3, 2, 1})
+	assertEqual(t, SliceB(Retro(Only(1, 2, 3))), []int{3, 2, 1})
 
-	r := Retro(B(Only("a", "b", "c")))
+	r := Retro(Only("a", "b", "c"))
 	s1 := r.Save()
 	s2 := r.SaveB()
 

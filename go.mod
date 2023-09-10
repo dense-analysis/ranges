@@ -1,3 +1,3 @@
 module github.com/dense-analysis/ranges
 
-go 1.18
+go 1.21

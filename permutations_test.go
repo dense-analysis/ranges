@@ -20,7 +20,7 @@ func TestPermutations(t *testing.T) {
 		t,
 		SliceF(
 			MapF(
-				Permutations(SliceF(F(B(Runes("abcd"))))),
+				Permutations(SliceF(Runes("abcd"))),
 				StringS,
 			),
 		),

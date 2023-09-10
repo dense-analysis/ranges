@@ -36,24 +36,6 @@ type RandomAccessRange[T any] interface {
 	SaveR() RandomAccessRange[T]
 }
 
-// I is a convenience function for passing a ForwardRange as an InputRange.
-func I[T any](r ForwardRange[T]) InputRange[T] { return r }
-
-// F is a convenience function for passing a BidirectionalRange as a ForwardRange
-func F[T any](r BidirectionalRange[T]) ForwardRange[T] { return r }
-
-// B is a convenience function for passing a RandomAccessRange as a BidirectionalRange
-func B[T any](r RandomAccessRange[T]) BidirectionalRange[T] { return r }
-
-// HasLength is any type that has a length.
-//
-// Deprecated: This was unused in the library, and doesn't map well to Go programming.
-//
-// Length ought to be a constant-time access operation.
-type HasLength interface {
-	Length() int
-}
-
 // Signed is any signed integer type.
 type Signed interface {
 	~int | ~int8 | ~int16 | ~int32 | ~int64

@@ -5,11 +5,11 @@ import "testing"
 func TestAll(t *testing.T) {
 	t.Parallel()
 
-	if !All[int](Only(2, 4), func(x int) bool { return x%2 == 0 }) {
+	if !All(Only(2, 4), func(x int) bool { return x%2 == 0 }) {
 		t.Fatal("All did not return a positive result.")
 	}
 
-	if All[int](Only(2, 1), func(x int) bool { return x%2 == 0 }) {
+	if All(Only(2, 1), func(x int) bool { return x%2 == 0 }) {
 		t.Fatal("All did not return a negative result.")
 	}
 }
@@ -17,11 +17,11 @@ func TestAll(t *testing.T) {
 func TestAny(t *testing.T) {
 	t.Parallel()
 
-	if Any[int](Only(1, 3), func(x int) bool { return x%2 == 0 }) {
+	if Any(Only(1, 3), func(x int) bool { return x%2 == 0 }) {
 		t.Fatal("Any did not return a negative result.")
 	}
 
-	if !Any[int](Only(2, 1), func(x int) bool { return x%2 == 0 }) {
+	if !Any(Only(2, 1), func(x int) bool { return x%2 == 0 }) {
 		t.Fatal("Any did not return a positive result.")
 	}
 }
@@ -81,23 +81,23 @@ func TestStartsWith(t *testing.T) {
 func TestSkipOver(t *testing.T) {
 	t.Parallel()
 
-	empty := F(B(Runes("")))
+	empty := ForwardRange[rune](Runes(""))
 
-	if !SkipOver(&empty, I(F(B(Runes("xyz")))), Eq[rune]) {
+	if !SkipOver(&empty, Runes("xyz"), Eq[rune]) {
 		t.Error("SkipOver(\"\", \"xyz\") != true")
 	}
 
-	if !SkipOver(nil, I(F(B(Runes("xyz")))), Eq[rune]) {
+	if !SkipOver(nil, Runes("xyz"), Eq[rune]) {
 		t.Error("SkipOver(nil, \"xyz\") != true")
 	}
 
-	r1 := F(B(Runes("Hello world")))
+	r1 := ForwardRange[rune](Runes("Hello world"))
 
-	if SkipOver(&r1, I(F(B(Runes("Ha")))), Eq[rune]) {
+	if SkipOver(&r1, Runes("Ha"), Eq[rune]) {
 		t.Fatal("SkipOver(\"Hello world\", \"Ha\") != false")
 	}
 
-	if !SkipOver(&r1, I(F(B(Runes("Hell")))), Eq[rune]) {
+	if !SkipOver(&r1, Runes("Hell"), Eq[rune]) {
 		t.Fatal("SkipOver(\"Hello world\", \"Hell\") != true")
 	}
 
@@ -107,9 +107,9 @@ func TestSkipOver(t *testing.T) {
 func TestLength(t *testing.T) {
 	t.Parallel()
 
-	assertEqual(t, Length(I(F(B(Only[int]())))), 0)
-	assertEqual(t, Length(I(F(B(Only(1))))), 1)
-	assertEqual(t, Length(I(F(B(Only(4, 5, 6))))), 3)
+	assertEqual(t, Length(Only[int]()), 0)
+	assertEqual(t, Length(Only(1)), 1)
+	assertEqual(t, Length(Only(4, 5, 6)), 3)
 }
 
 func TestCount(t *testing.T) {
@@ -136,7 +136,7 @@ func TestCount(t *testing.T) {
 func TestCountUntil(t *testing.T) {
 	t.Parallel()
 
-	r := F(B(Only(4, 2, 3, 4, 5)))
+	r := Only(4, 2, 3, 4, 5)
 	res1 := CountUntil[int](r, func(x int) bool { return x%2 == 1 })
 
 	if res1 != 2 {

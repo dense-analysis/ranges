@@ -5,14 +5,14 @@ import "testing"
 func TestFind(t *testing.T) {
 	t.Parallel()
 
-	result := Slice(Find(I(F(B(Only(1, 2, 3, 4)))), Ge[int], 3))
+	result := Slice(Find(Only(1, 2, 3, 4), Ge[int], 3))
 	assertEqual(t, result, []int{3, 4})
 }
 
 func TestFindF(t *testing.T) {
 	t.Parallel()
 
-	assertHasSaveableFront(t, FindF(F(B(Only(1, 2, 3, 4))), Ge[int], 3), 3)
+	assertHasSaveableFront(t, FindF(Only(1, 2, 3, 4), Ge[int], 3), 3)
 }
 
 func TestFindS(t *testing.T) {
@@ -24,13 +24,13 @@ func TestFindS(t *testing.T) {
 func TestFindComparable(t *testing.T) {
 	t.Parallel()
 
-	assertEqual(t, Slice(FindComparable(I(F(B(Only(1, 2, 3, 4)))), 3)), []int{3, 4})
+	assertEqual(t, Slice(FindComparable(Only(1, 2, 3, 4), 3)), []int{3, 4})
 }
 
 func TestFindComparableF(t *testing.T) {
 	t.Parallel()
 
-	assertEqual(t, SliceF(FindComparableF(F(B(Only(1, 2, 3, 4))), 3)), []int{3, 4})
+	assertEqual(t, SliceF(FindComparableF(Only(1, 2, 3, 4), 3)), []int{3, 4})
 }
 
 func TestFindComparableS(t *testing.T) {
@@ -42,11 +42,11 @@ func TestFindComparableS(t *testing.T) {
 func TestFindEqual(t *testing.T) {
 	t.Parallel()
 
-	result := SliceF(FindEqual(F(B(Runes("hello world"))), Eq[rune], F(B(Runes("or")))))
+	result := SliceF(FindEqual(Runes("hello world"), Eq[rune], Runes("or")))
 
 	assertEqual(t, string(result), "orld")
 
-	result2 := SliceF(FindEqual(F(B(Only(1, 3, 2, 3, 4, 5))), Eq[int], F(B(Only(3, 4)))))
+	result2 := SliceF(FindEqual(Only(1, 3, 2, 3, 4, 5), Eq[int], Only(3, 4)))
 
 	assertEqual(t, result2, []int{3, 4, 5})
 }
@@ -54,7 +54,7 @@ func TestFindEqual(t *testing.T) {
 func TestFindEqualS(t *testing.T) {
 	t.Parallel()
 
-	result := SliceF(FindEqualS([]rune("hello world"), Eq[rune], F(B(Runes("or")))))
+	result := SliceF(FindEqualS([]rune("hello world"), Eq[rune], Runes("or")))
 
 	assertEqual(t, string(result), "orld")
 }
@@ -62,11 +62,11 @@ func TestFindEqualS(t *testing.T) {
 func TestFindEqualComparable(t *testing.T) {
 	t.Parallel()
 
-	result := SliceF(FindEqualComparable(F(B(Runes("hello world"))), F(B(Runes("or")))))
+	result := SliceF(FindEqualComparable(Runes("hello world"), Runes("or")))
 
 	assertEqual(t, string(result), "orld")
 
-	result2 := SliceF(FindEqualComparable(F(B(Only(1, 3, 2, 3, 4, 5))), F(B(Only(3, 4)))))
+	result2 := SliceF(FindEqualComparable(Only(1, 3, 2, 3, 4, 5), Only(3, 4)))
 
 	assertEqual(t, result2, []int{3, 4, 5})
 }
@@ -74,22 +74,22 @@ func TestFindEqualComparable(t *testing.T) {
 func TestFindEqualComparableS(t *testing.T) {
 	t.Parallel()
 
-	result := SliceF(FindEqualComparableS([]rune("hello world"), F(B(Runes("or")))))
+	result := SliceF(FindEqualComparableS([]rune("hello world"), Runes("or")))
 	assertEqual(t, string(result), "orld")
 }
 
 func TestFindAdjacent(t *testing.T) {
 	t.Parallel()
 
-	result := SliceF(FindAdjacent(F(B(Runes("abba"))), Eq[rune]))
+	result := SliceF(FindAdjacent(Runes("abba"), Eq[rune]))
 
 	assertEqual(t, string(result), "bba")
 
-	result2 := SliceF(FindAdjacent(F(B(Runes("abc"))), Eq[rune]))
+	result2 := SliceF(FindAdjacent(Runes("abc"), Eq[rune]))
 
 	assertEqual(t, string(result2), "")
 
-	result3 := SliceF(FindAdjacent(F(B(Only(1, 2, 3, 4, 4, 5))), Eq[int]))
+	result3 := SliceF(FindAdjacent(Only(1, 2, 3, 4, 4, 5), Eq[int]))
 
 	assertEqual(t, result3, []int{4, 4, 5})
 }
@@ -104,15 +104,15 @@ func TestFindAdjacentS(t *testing.T) {
 func TestFindAdjacentComparable(t *testing.T) {
 	t.Parallel()
 
-	result := SliceF(FindAdjacentComparable(F(B(Runes("abba")))))
+	result := SliceF(FindAdjacentComparable(Runes("abba")))
 
 	assertEqual(t, string(result), "bba")
 
-	result2 := SliceF(FindAdjacentComparable(F(B(Runes("abc")))))
+	result2 := SliceF(FindAdjacentComparable(Runes("abc")))
 
 	assertEqual(t, string(result2), "")
 
-	result3 := SliceF(FindAdjacentComparable(F(B(Only(1, 2, 3, 4, 4, 5)))))
+	result3 := SliceF(FindAdjacentComparable(Only(1, 2, 3, 4, 4, 5)))
 
 	assertEqual(t, result3, []int{4, 4, 5})
 }
@@ -127,7 +127,7 @@ func TestFindAdjacentComparableS(t *testing.T) {
 func TestFindAmong(t *testing.T) {
 	t.Parallel()
 
-	result := Slice(FindAmong(I(F(B(Runes("abcd")))), Eq[rune], F(B(Runes("qcx")))))
+	result := Slice(FindAmong(Runes("abcd"), Eq[rune], Runes("qcx")))
 
 	assertEqual(t, string(result), "cd")
 }
@@ -135,16 +135,16 @@ func TestFindAmong(t *testing.T) {
 func TestFindAmongF(t *testing.T) {
 	t.Parallel()
 
-	result := SliceF(FindAmongF(F(B(Runes("abcd"))), Eq[rune], F(B(Runes("qcx")))))
+	result := SliceF(FindAmongF(Runes("abcd"), Eq[rune], Runes("qcx")))
 
 	assertEqual(t, string(result), "cd")
-	assertHasSaveableFront(t, FindAmongF(F(B(Runes("abcd"))), Eq[rune], F(B(Runes("qcx")))), 'c')
+	assertHasSaveableFront(t, FindAmongF(Runes("abcd"), Eq[rune], Runes("qcx")), 'c')
 }
 
 func TestFindAmongS(t *testing.T) {
 	t.Parallel()
 
-	result := SliceF(FindAmongS([]rune("abcd"), Eq[rune], F(B(Runes("qcx")))))
+	result := SliceF(FindAmongS([]rune("abcd"), Eq[rune], Runes("qcx")))
 
 	assertEqual(t, string(result), "cd")
 }
@@ -152,7 +152,7 @@ func TestFindAmongS(t *testing.T) {
 func TestFindAmongComparable(t *testing.T) {
 	t.Parallel()
 
-	result := Slice(FindAmongComparable(I(F(B(Runes("abcd")))), F(B(Runes("qcx")))))
+	result := Slice(FindAmongComparable(Runes("abcd"), Runes("qcx")))
 
 	assertEqual(t, string(result), "cd")
 }
@@ -160,16 +160,16 @@ func TestFindAmongComparable(t *testing.T) {
 func TestFindAmongComparableF(t *testing.T) {
 	t.Parallel()
 
-	result := SliceF(FindAmongComparableF(F(B(Runes("abcd"))), F(B(Runes("qcx")))))
+	result := SliceF(FindAmongComparableF(Runes("abcd"), Runes("qcx")))
 
 	assertEqual(t, string(result), "cd")
-	assertHasSaveableFront(t, FindAmongComparableF(F(B(Runes("abcd"))), F(B(Runes("qcx")))), 'c')
+	assertHasSaveableFront(t, FindAmongComparableF(Runes("abcd"), Runes("qcx")), 'c')
 }
 
 func TestFindAmongComparableS(t *testing.T) {
 	t.Parallel()
 
-	result := SliceF(FindAmongComparableS([]rune("abcd"), F(B(Runes("qcx")))))
+	result := SliceF(FindAmongComparableS([]rune("abcd"), Runes("qcx")))
 
 	assertEqual(t, string(result), "cd")
 }
@@ -177,11 +177,11 @@ func TestFindAmongComparableS(t *testing.T) {
 func TestCanFind(t *testing.T) {
 	t.Parallel()
 
-	if !CanFind(I(F(B(Only(1, 2, 3, 4)))), Ge[int], 3) {
+	if !CanFind(Only(1, 2, 3, 4), Ge[int], 3) {
 		t.Error("Couldn't find x >= 3 in (1, 2, 3, 4)")
 	}
 
-	if CanFind(I(F(B(Only(1, 2, 3, 4)))), Ge[int], 10) {
+	if CanFind(Only(1, 2, 3, 4), Ge[int], 10) {
 		t.Error("Incorrectly found x >= 10 in (1, 2, 3, 4)")
 	}
 }
@@ -197,11 +197,11 @@ func TestCanFindS(t *testing.T) {
 func TestCanFindComparable(t *testing.T) {
 	t.Parallel()
 
-	if !CanFindComparable(I(F(B(Only(1, 2, 3, 4)))), 3) {
+	if !CanFindComparable(Only(1, 2, 3, 4), 3) {
 		t.Error("Couldn't find x == 3 in (1, 2, 3, 4)")
 	}
 
-	if CanFindComparable(I(F(B(Only(1, 2, 3, 4)))), 10) {
+	if CanFindComparable(Only(1, 2, 3, 4), 10) {
 		t.Error("Incorrectly found x == 10 in (1, 2, 3, 4)")
 	}
 }

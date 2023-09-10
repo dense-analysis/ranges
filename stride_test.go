@@ -23,12 +23,12 @@ func TestStrideF(t *testing.T) {
 
 	assertEqual(
 		t,
-		SliceF(StrideF(F(Iota(10)), 1)),
+		SliceF(StrideF(Iota(10), 1)),
 		SliceB(Iota(10)),
 	)
 	assertEqual(
 		t,
-		SliceF(StrideF(F(Iota(10)), 3)),
+		SliceF(StrideF(Iota(10), 3)),
 		[]int{0, 3, 6, 9},
 	)
 }
@@ -40,7 +40,7 @@ func TestStrideS(t *testing.T) {
 
 	assertEqual(
 		t,
-		SliceF(StrideS(SliceF(F(Iota(10))), 1)),
+		SliceF(StrideS(SliceF(Iota(10)), 1)),
 		SliceB(Iota(10)),
 	)
 	assertEqual(
@@ -54,6 +54,6 @@ func TestStrideInvalidStepPanic(t *testing.T) {
 	t.Parallel()
 
 	assertPanic(t, "step < 1 for Stride", func() { Stride[int](Iota(0), 0) })
-	assertPanic(t, "step < 1 for Stride", func() { StrideF(F(Iota(0)), 0) })
+	assertPanic(t, "step < 1 for Stride", func() { StrideF(Iota(0), 0) })
 	assertPanic(t, "step < 1 for Stride", func() { StrideS([]int{}, 0) })
 }

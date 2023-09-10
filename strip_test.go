@@ -5,15 +5,15 @@ import "testing"
 func TestStripLeftComparable(t *testing.T) {
 	t.Parallel()
 
-	result := Slice(StripLeftComparable(I(F(B(Only(5, 5, 3, 5, 2)))), 5))
+	result := Slice(StripLeftComparable(Only(5, 5, 3, 5, 2), 5))
 
 	assertEqual(t, result, []int{3, 5, 2})
 
-	result2 := StripLeftComparable(I(F(B(Only(5, 5, 3, 5, 2)))), 5)
+	result2 := StripLeftComparable(Only(5, 5, 3, 5, 2), 5)
 
 	assertEqual(t, result2.Front(), 3)
 
-	result3 := StripLeftComparable(I(F(B(Only(5, 5, 3, 5, 2)))), 5)
+	result3 := StripLeftComparable(Only(5, 5, 3, 5, 2), 5)
 
 	result3.PopFront()
 	assertHasFront(t, result3, 5)
@@ -25,11 +25,11 @@ func TestStripLeftComparable(t *testing.T) {
 func TestStripLeftComparableF(t *testing.T) {
 	t.Parallel()
 
-	result := SliceF(StripLeftComparableF(F(B(Only(5, 5, 3, 5, 2))), 5))
+	result := SliceF(StripLeftComparableF(Only(5, 5, 3, 5, 2), 5))
 
 	assertEqual(t, result, []int{3, 5, 2})
 
-	result2 := StripLeftComparableF(F(B(Only(5, 5, 3, 5, 2))), 5)
+	result2 := StripLeftComparableF(Only(5, 5, 3, 5, 2), 5)
 
 	assertHasSaveableFront(t, result2, 3)
 }
@@ -37,7 +37,7 @@ func TestStripLeftComparableF(t *testing.T) {
 func TestStripLeftComparableB(t *testing.T) {
 	t.Parallel()
 
-	r := StripLeftComparableB(B(Only(5, 5, 3, 5, 2)), 5)
+	r := StripLeftComparableB(Only(5, 5, 3, 5, 2), 5)
 
 	assertHasSaveableBack(t, r, 2)
 	assertEqual(t, SliceB(Retro(r)), []int{5, 3})
@@ -73,11 +73,11 @@ func TestStripLeftComparableS(t *testing.T) {
 func TestStripLeft(t *testing.T) {
 	t.Parallel()
 
-	result := Slice(StripLeft(I(F(B(Only(5, 5, 3, 5, 2)))), func(a int) bool { return a == 5 }))
+	result := Slice(StripLeft(Only(5, 5, 3, 5, 2), func(a int) bool { return a == 5 }))
 
 	assertEqual(t, result, []int{3, 5, 2})
 
-	result2 := StripLeftComparable(I(F(B(Only(5, 5, 3, 5, 2)))), 5)
+	result2 := StripLeftComparable(Only(5, 5, 3, 5, 2), 5)
 
 	result2.PopFront()
 	assertHasFront(t, result2, 5)
@@ -89,11 +89,11 @@ func TestStripLeft(t *testing.T) {
 func TestStripLeftF(t *testing.T) {
 	t.Parallel()
 
-	result := SliceF(StripLeftF(F(B(Only(5, 5, 3, 5, 2))), func(a int) bool { return a == 5 }))
+	result := SliceF(StripLeftF(Only(5, 5, 3, 5, 2), func(a int) bool { return a == 5 }))
 
 	assertEqual(t, result, []int{3, 5, 2})
 
-	result2 := StripLeftF(F(B(Only(5, 5, 3, 5, 2))), func(a int) bool { return a == 5 })
+	result2 := StripLeftF(Only(5, 5, 3, 5, 2), func(a int) bool { return a == 5 })
 
 	assertHasSaveableFront(t, result2, 3)
 }
@@ -101,7 +101,7 @@ func TestStripLeftF(t *testing.T) {
 func TestStripLeftB(t *testing.T) {
 	t.Parallel()
 
-	r := StripLeftB(B(Only(5, 5, 3, 5, 2)), func(a int) bool { return a == 5 })
+	r := StripLeftB(Only(5, 5, 3, 5, 2), func(a int) bool { return a == 5 })
 
 	assertHasSaveableBack(t, r, 2)
 	assertEqual(t, SliceB(Retro(r)), []int{5, 3})
@@ -129,11 +129,11 @@ func TestStripLeftR(t *testing.T) {
 func TestStripRightComparable(t *testing.T) {
 	t.Parallel()
 
-	result := SliceB(StripRightComparable(B(Only(3, 5, 2, 5, 5)), 5))
+	result := SliceB(StripRightComparable(Only(3, 5, 2, 5, 5), 5))
 
 	assertEqual(t, result, []int{3, 5, 2})
 
-	r := StripRightComparable(B(Only(0, 1, 2, 3, 0, 0)), 0)
+	r := StripRightComparable(Only(0, 1, 2, 3, 0, 0), 0)
 
 	assertHasSaveableBack(t, r, 3)
 	assertHasSaveableFrontB(t, r, 0)
@@ -174,11 +174,11 @@ func TestStripRightComparableS(t *testing.T) {
 func TestStripRight(t *testing.T) {
 	t.Parallel()
 
-	result := SliceB(StripRight(B(Only(3, 5, 2, 5, 5)), func(a int) bool { return a == 5 }))
+	result := SliceB(StripRight(Only(3, 5, 2, 5, 5), func(a int) bool { return a == 5 }))
 
 	assertEqual(t, result, []int{3, 5, 2})
 
-	r := StripRight(B(Only(0, 1, 2, 3, 0, 0)), func(a int) bool { return a == 0 })
+	r := StripRight(Only(0, 1, 2, 3, 0, 0), func(a int) bool { return a == 0 })
 
 	assertHasSaveableBack(t, r, 3)
 	assertHasSaveableFrontB(t, r, 0)
@@ -219,7 +219,7 @@ func TestStripRightS(t *testing.T) {
 func TestStripComparable(t *testing.T) {
 	t.Parallel()
 
-	r := StripComparable(B(Only(0, 0, 0, 1, 0, 2, 0, 0)), 0)
+	r := StripComparable(Only(0, 0, 0, 1, 0, 2, 0, 0), 0)
 
 	assertHasSaveableBack(t, r, 2)
 	assertHasSaveableFrontB(t, r, 1)
@@ -256,7 +256,7 @@ func TestStripComparableS(t *testing.T) {
 func TestStrip(t *testing.T) {
 	t.Parallel()
 
-	r := Strip(B(Only(0, 0, 0, 1, 0, 2, 0, 0)), func(a int) bool { return a == 0 })
+	r := Strip(Only(0, 0, 0, 1, 0, 2, 0, 0), func(a int) bool { return a == 0 })
 
 	assertHasSaveableBack(t, r, 2)
 	assertHasSaveableFrontB(t, r, 1)

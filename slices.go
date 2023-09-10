@@ -71,12 +71,12 @@ func Slice[T any](r InputRange[T]) []T {
 
 // SliceF is `Slice` accepting a ForwardRange.
 func SliceF[T any](r ForwardRange[T]) []T {
-	return Slice(I(r))
+	return Slice(r)
 }
 
 // SliceB is `Slice` accepting a BidirectionalRange.
 func SliceB[T any](r BidirectionalRange[T]) []T {
-	return Slice(I(F(r)))
+	return Slice(r)
 }
 
 // SliceR is `Slice` accepting a RandomAccessRange.

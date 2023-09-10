@@ -11,7 +11,7 @@ func Each[T any](r InputRange[T], cb func(element T)) {
 
 // EachS is `Each` accepting a slice.
 func EachS[T any](r []T, cb func(element T)) {
-	Each(I(F(B(SliceRange(r)))), cb)
+	Each(SliceRange(r), cb)
 }
 
 // Exhaust steps through every element of a range until the range is empty.

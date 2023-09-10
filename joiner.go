@@ -127,14 +127,14 @@ func JoinerF[T any](r ForwardRange[ForwardRange[T]], separator ForwardRange[T]) 
 
 // JoinerS is `JoinerF` accepting a slice of ranges.
 func JoinerS[T any](r []ForwardRange[T], separator ForwardRange[T]) ForwardRange[T] {
-	return JoinerF(F(B(SliceRange(r))), separator)
+	return JoinerF(SliceRange(r), separator)
 }
 
 // JoinerSS is `JoinerF` accepting a slice of lisces.
 func JoinerSS[T any](r [][]T, separator []T) ForwardRange[T] {
 	return JoinerF(
-		CacheF(F(B(MapS(r, func(item []T) ForwardRange[T] { return F(B(SliceRange(item))) })))),
-		F(B(SliceRange(separator))),
+		CacheF(MapS(r, func(item []T) ForwardRange[T] { return SliceRange(item) })),
+		SliceRange(separator),
 	)
 }
 
@@ -143,7 +143,7 @@ func JoinStrings(r ForwardRange[string], separator string) string {
 	return string(SliceF(
 		JoinerF(
 			CacheF(MapF(r, func(x string) ForwardRange[byte] { return Bytes(x) })),
-			F(B(Bytes(separator))),
+			Bytes(separator),
 		),
 	))
 }
