@@ -313,7 +313,12 @@ func createFile(wg *sync.WaitGroup, path string, cb func(*os.File)) {
 	}()
 }
 
-func main() {
+type filesToCreate struct {
+	tupleFilename string
+	zipFilename   string
+}
+
+func createFiles(toCreate filesToCreate) {
 	tupleNames = map[int]string{
 		1:  "Unit",
 		2:  "Pair",
@@ -343,8 +348,15 @@ func main() {
 
 	var wg sync.WaitGroup
 
-	createFile(&wg, "tuple.go", writeTupleFile)
-	createFile(&wg, "zip.go", writeZipFile)
+	createFile(&wg, toCreate.tupleFilename, writeTupleFile)
+	createFile(&wg, toCreate.zipFilename, writeZipFile)
 
 	wg.Wait()
+}
+
+func main() {
+	createFiles(filesToCreate{
+		tupleFilename: "tuple.go",
+		zipFilename:   "zip.go",
+	})
 }
